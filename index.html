@@ -61,24 +61,36 @@
                     </div>
                     <div class="category-content active">
                         <div class="products-grid">
-                            <div class="product-card" data-name="butter-roasted salted cashews">
+                            <div class="product-card" data-name="butter-roasted salted cashews" onclick="openProductModal('king-cashews-butter')">
                                 <div class="product-image">
-                                    <img src="menue/كاجو مدخن.webp" alt="Butter-Roasted Salted Cashews">
+                                    <img src="menue/كاجو مدخن.webp" alt="King Cashews Butter-Roasted Salted">
+                                    <div class="product-badges">
+                                        <span class="badge premium">Premium</span>
+                                        <span class="badge nutrient">Protein Rich</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Butter-Roasted Salted</h4>
+                                    <h4>King Cashews (Butter-Roasted Salted)</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">195 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Luxurious snack crafted for indulgence...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="salted cashews">
+                            <div class="product-card" data-name="salted cashews" onclick="openProductModal('king-cashews-salted')">
                                 <div class="product-image">
-                                    <img src="menue/كاجو مدخن.webp" alt="Salted Cashews">
+                                    <img src="menue/كاجو مدخن.webp" alt="King Sized Cashew Roasted Salted">
+                                    <div class="product-badges">
+                                        <span class="badge king-size">King Size</span>
+                                        <span class="badge nutrient">High Protein</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Salted</h4>
+                                    <h4>King Sized Cashew (Roasted Salted)</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">195 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Extra-large cashews roasted to perfection...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
                             <div class="product-card" data-name="hickory smoked cashews">
@@ -103,54 +115,84 @@
                     </div>
                     <div class="category-content active">
                         <div class="products-grid">
-                            <div class="product-card" data-name="hickory smoked almonds">
+                            <div class="product-card" data-name="hickory smoked almonds" onclick="openProductModal('hickory-smoked-almonds')">
                                 <div class="product-image">
-                                    <img src="menue/hickory almonds.webp" alt="Hickory Smoked Almonds">
+                                    <img src="menue/hickory almonds.webp" alt="Nutzzi Hickory Smoked Almonds">
+                                    <div class="product-badges">
+                                        <span class="badge gourmet">Gourmet</span>
+                                        <span class="badge smoky">Smoky</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Hickory Smoked</h4>
+                                    <h4>Nutzzi Almonds - Hickory Smoked</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">185 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Rich, smoky flavor with woodsy hickory aroma...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="unsalted almonds">
+                            <div class="product-card" data-name="roasted salted almonds" onclick="openProductModal('roasted-salted-almonds')">
                                 <div class="product-image">
-                                    <img src="menue/salted almonds.webp" alt="Unsalted Almonds">
+                                    <img src="menue/salted almonds.webp" alt="Roasted Almonds Salted">
+                                    <div class="product-badges">
+                                        <span class="badge classic">Classic</span>
+                                        <span class="badge nutrient">Vitamin E</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Unsalted</h4>
+                                    <h4>Roasted Almonds (Salted)</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">185 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Classic taste with perfect touch of salt...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="chilli lime almonds">
+                            <div class="product-card" data-name="chilli lime almonds" onclick="openProductModal('chilli-lime-almonds')">
                                 <div class="product-image">
-                                    <img src="menue/chilli lemon almonds.webp" alt="Crunchy Coated Chilli Lime Almonds">
+                                    <img src="menue/chilli lemon almonds.webp" alt="Chilli Lime Crunchy Coated Almonds">
+                                    <div class="product-badges">
+                                        <span class="badge spicy">Spicy</span>
+                                        <span class="badge zesty">Zesty</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Crunchy Coated (Chilli Lime)</h4>
+                                    <h4>Chilli Lime Crunchy Coated Almonds</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">180 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Fiery chili meets refreshing lime zest...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="cheese almonds">
+                            <div class="product-card" data-name="cheese almonds" onclick="openProductModal('cheese-coated-almonds')">
                                 <div class="product-image">
-                                    <img src="menue/cheese almodnd and tomato one also .webp" alt="Cheese Almonds">
+                                    <img src="menue/cheese almodnd and tomato one also .webp" alt="Almonds Crunchy Coated Cheese">
+                                    <div class="product-badges">
+                                        <span class="badge premium">Premium</span>
+                                        <span class="badge large-pack">250g</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Cheese</h4>
-                                    <p class="weight">100 GM</p>
-                                    <p class="price">180 <span class="currency">EGP</span></p>
+                                    <h4>Almonds Crunchy Coated (Cheese)</h4>
+                                    <p class="weight">250 GM</p>
+                                    <p class="price">465 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Handpicked almonds with rich cheese coating...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
                             <div class="product-card" data-name="tomatoes herbs almonds">
                                 <div class="product-image">
                                     <img src="menue/cheese almodnd and tomato one also .webp" alt="Crunchy Coated Tomatoes & Herbs Almonds">
+                                    <div class="product-badges">
+                                        <span class="badge savory">Savory</span>
+                                        <span class="badge herbs">Herbs</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
                                     <h4>Crunchy Coated (Tomatoes & Herbs)</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">185 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Savory blend of tomatoes and aromatic herbs...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
                         </div>
@@ -165,14 +207,20 @@
                     </div>
                     <div class="category-content active">
                         <div class="products-grid">
-                            <div class="product-card" data-name="salted pistachio">
+                            <div class="product-card" data-name="salted pistachio" onclick="openProductModal('american-pistachio')">
                                 <div class="product-image">
-                                    <img src="menue/pistachio.webp" alt="Salted Pistachio">
+                                    <img src="menue/pistachio.webp" alt="Roasted Salted Pistachio American">
+                                    <div class="product-badges">
+                                        <span class="badge american">American</span>
+                                        <span class="badge heart-healthy">Heart Healthy</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Pistachio (Salted)</h4>
+                                    <h4>Roasted Salted Pistachio (American)</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">210 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Premium taste from finest American pistachios...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
                             <div class="product-card" data-name="butter-roasted hazelnuts">
@@ -195,24 +243,36 @@
                                     <p class="price">165 <span class="currency">EGP</span></p>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="peeled salted peanuts">
+                            <div class="product-card" data-name="peeled salted peanuts" onclick="openProductModal('roasted-salted-peanuts')">
                                 <div class="product-image">
-                                    <img src="menue/peanut.webp" alt="Peeled Salted Peanuts">
+                                    <img src="menue/peanut.webp" alt="Roasted Salted Peanuts">
+                                    <div class="product-badges">
+                                        <span class="badge gluten-free">Gluten Free</span>
+                                        <span class="badge nutrient">Vitamin E</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Peanuts (Peeled Salted)</h4>
+                                    <h4>Roasted Salted Peanuts</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">98 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Classic taste loved by all, perfectly seasoned...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="peeled unsalted peanuts">
+                            <div class="product-card" data-name="peeled unsalted peanuts" onclick="openProductModal('roasted-unsalted-peanuts')">
                                 <div class="product-image">
-                                    <img src="menue/peanut.webp" alt="Peeled Unsalted Peanuts">
+                                    <img src="menue/peanut.webp" alt="Roasted Unsalted Peanuts">
+                                    <div class="product-badges">
+                                        <span class="badge natural">All Natural</span>
+                                        <span class="badge keto">Keto Friendly</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Peanuts (Peeled Unsalted)</h4>
+                                    <h4>Roasted Unsalted Peanuts</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">98 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Pure natural flavor, wholesome and nutritious...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
                         </div>
@@ -237,34 +297,52 @@
                                     <p class="price">125 <span class="currency">EGP</span></p>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="egyptian seeds">
+                            <div class="product-card" data-name="egyptian seeds" onclick="openProductModal('egyptian-seeds')">
                                 <div class="product-image">
-                                    <img src="menue/لب مصري.webp" alt="Roasted Salted Egyptian Seeds">
+                                    <img src="menue/لب مصري.webp" alt="Roasted Egyptian Seeds">
+                                    <div class="product-badges">
+                                        <span class="badge authentic">Authentic</span>
+                                        <span class="badge fiber">High Fiber</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Egyptian Seeds (Roasted Salted)</h4>
+                                    <h4>Roasted Egyptian Seeds</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">125 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Traditional flavors of Egypt in a healthy snack...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="pumpkin seeds">
+                            <div class="product-card" data-name="pumpkin seeds" onclick="openProductModal('pumpkin-seeds')">
                                 <div class="product-image">
                                     <img src="menue/لب خشابي.jpg" alt="Roasted Salted Pumpkin Seeds">
+                                    <div class="product-badges">
+                                        <span class="badge antioxidant">Antioxidants</span>
+                                        <span class="badge nutrient">Magnesium</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Pumpkin Seeds (Roasted Salted)</h4>
+                                    <h4>Roasted Salted Pumpkin Seeds</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">125 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Wholesome goodness packed with nutrients...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
-                            <div class="product-card" data-name="sunflower seeds">
+                            <div class="product-card" data-name="sunflower seeds" onclick="openProductModal('sunflower-seeds')">
                                 <div class="product-image">
                                     <img src="menue/sunflowerseeds.webp" alt="Roasted Salted Sunflower Seeds">
+                                    <div class="product-badges">
+                                        <span class="badge vegan">Vegan</span>
+                                        <span class="badge nutrient">Vitamin E</span>
+                                    </div>
                                 </div>
                                 <div class="product-info">
-                                    <h4>Sunflower Seeds (Roasted Salted)</h4>
+                                    <h4>Roasted Salted Sunflower Seeds</h4>
                                     <p class="weight">100 GM</p>
                                     <p class="price">115 <span class="currency">EGP</span></p>
+                                    <p class="description-preview">Crunchy goodness with vitamin E and magnesium...</p>
+                                    <button class="view-details-btn">View Details</button>
                                 </div>
                             </div>
                         </div>
@@ -274,10 +352,54 @@
         </section>
     </main>
 
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/201024299309?text=Hello! I'm interested in your premium nuts and seeds. Can you help me with my order?" 
+       class="whatsapp-float" target="_blank" title="Order via WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-text">Order Now</span>
+    </a>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modalImage" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <h2 id="modalTitle"></h2>
+                    <p class="modal-weight" id="modalWeight"></p>
+                    <p class="modal-price" id="modalPrice"></p>
+                    <div class="modal-badges" id="modalBadges"></div>
+                    <div class="modal-description" id="modalDescription"></div>
+                    <div class="modal-features" id="modalFeatures"></div>
+                    <div class="quantity-selector">
+                        <label for="quantity">Quantity:</label>
+                        <div class="quantity-controls">
+                            <button onclick="changeQuantity(-1)">-</button>
+                            <input type="number" id="quantity" value="1" min="1" max="10">
+                            <button onclick="changeQuantity(1)">+</button>
+                        </div>
+                        <p class="total-price">Total: <span id="totalPrice">195</span> <span class="currency">EGP</span></p>
+                    </div>
+                    <button class="order-btn" onclick="orderProduct()">
+                        <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 Nutzzi. All rights reserved.</p>
             <p>Premium Quality Nuts & Seeds</p>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> +20 102 429 9309</p>
+                <p><i class="fab fa-whatsapp"></i> WhatsApp Orders</p>
+                <p><i class="fas fa-map-marker-alt"></i> Cairo, Egypt</p>
+            </div>
         </div>
     </footer>
 

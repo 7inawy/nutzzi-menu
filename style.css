@@ -377,6 +377,76 @@ body {
     font-weight: 500;
 }
 
+/* Product Badges */
+.product-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 10;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.badge.premium { background: linear-gradient(45deg, #ff6b6b, #ff8e53); }
+.badge.king-size { background: linear-gradient(45deg, #667eea, #764ba2); }
+.badge.american { background: linear-gradient(45deg, #4ecdc4, #44a08d); }
+.badge.gluten-free { background: linear-gradient(45deg, #96c93d, #00b09b); }
+.badge.natural { background: linear-gradient(45deg, #8360c3, #2ebf91); }
+.badge.keto { background: linear-gradient(45deg, #ff9a9e, #fecfef); }
+.badge.antioxidant { background: linear-gradient(45deg, #a8edea, #fed6e3); }
+.badge.vegan { background: linear-gradient(45deg, #96c93d, #00b09b); }
+.badge.authentic { background: linear-gradient(45deg, #ffecd2, #fcb69f); }
+.badge.heart-healthy { background: linear-gradient(45deg, #ff9a9e, #fecfef); }
+.badge.fiber { background: linear-gradient(45deg, #a8edea, #fed6e3); }
+.badge.nutrient { background: linear-gradient(45deg, #667eea, #764ba2); }
+.badge.gourmet { background: linear-gradient(45deg, #ff6b6b, #ff8e53); }
+.badge.smoky { background: linear-gradient(45deg, #2c3e50, #34495e); }
+.badge.classic { background: linear-gradient(45deg, #667eea, #764ba2); }
+.badge.spicy { background: linear-gradient(45deg, #ff4757, #ff3742); }
+.badge.zesty { background: linear-gradient(45deg, #7bed9f, #70a1ff); }
+.badge.large-pack { background: linear-gradient(45deg, #ff9ff3, #f368e0); }
+.badge.savory { background: linear-gradient(45deg, #ff9f43, #ff7675); }
+.badge.herbs { background: linear-gradient(45deg, #00b894, #00cec9); }
+
+/* Description Preview */
+.description-preview {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    font-style: italic;
+    line-height: 1.3;
+}
+
+/* View Details Button */
+.view-details-btn {
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.view-details-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
 /* Footer */
 .footer {
     background: rgba(44, 62, 80, 0.95);
@@ -389,6 +459,321 @@ body {
 
 .footer p {
     margin: 0.5rem 0;
+}
+
+.contact-info {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.contact-info p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.25rem 0;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 2% auto;
+    padding: 0;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #666;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close:hover {
+    background: rgba(255, 107, 107, 0.9);
+    color: white;
+}
+
+.modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.modal-image {
+    position: relative;
+}
+
+.modal-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.modal-info h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.modal-weight {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ff6b6b;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-description {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.modal-features {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.modal-features h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.modal-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-features li {
+    padding: 0.3rem 0;
+    color: #666;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.modal-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #4ecdc4;
+    font-weight: bold;
+}
+
+.quantity-selector {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.quantity-selector label {
+    display: block;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.quantity-controls button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.quantity-controls button:hover {
+    background: #ff5252;
+    transform: scale(1.1);
+}
+
+.quantity-controls input {
+    width: 80px;
+    padding: 0.5rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.total-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.order-btn {
+    background: linear-gradient(45deg, #25d366, #128c7e);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.order-btn:hover {
+    background: linear-gradient(45deg, #20ba5a, #0f7a6b);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+}
+
+/* Floating WhatsApp Button */
+.whatsapp-float {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: linear-gradient(45deg, #25d366, #128c7e);
+    color: white;
+    border-radius: 50px;
+    padding: 15px 20px;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+    z-index: 1500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    animation: whatsappPulse 2s infinite;
+}
+
+.whatsapp-float:hover {
+    background: linear-gradient(45deg, #20ba5a, #0f7a6b);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(37, 211, 102, 0.4);
+    animation: none;
+}
+
+.whatsapp-float i {
+    font-size: 1.5rem;
+}
+
+.whatsapp-text {
+    color: white;
+}
+
+@keyframes whatsappPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 12px 35px rgba(37, 211, 102, 0.5);
+    }
+}
+
+@media (max-width: 768px) {
+    .whatsapp-float {
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .whatsapp-float i {
+        font-size: 1.3rem;
+    }
+    
+    .whatsapp-text {
+        display: none;
+    }
+    
+    .whatsapp-float {
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        padding: 0;
+        justify-content: center;
+    }
 }
 
 /* Animations */
@@ -589,6 +974,29 @@ body {
 
     .category-header h3 {
         font-size: 1.3rem;
+    }
+
+    .contact-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .modal-body {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .modal-image img {
+        height: 250px;
+    }
+
+    .modal-info h2 {
+        font-size: 1.5rem;
+    }
+
+    .modal-price {
+        font-size: 2rem;
     }
 }
 
