@@ -1,0 +1,316 @@
+{% comment %}
+  SEO Optimizer Section
+  Advanced SEO features based on awesome-shopify best practices
+{% endcomment %}
+
+<div class="seo-optimizer" data-seo-optimizer>
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "{{ shop.name }}",
+    "url": "{{ shop.url }}",
+    "logo": "{{ settings.logo | image_url: width: 200 }}",
+    "description": "{{ shop.description | escape }}",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ shop.address.street }}",
+      "addressLocality": "{{ shop.address.city }}",
+      "addressRegion": "{{ shop.address.province }}",
+      "postalCode": "{{ shop.address.zip }}",
+      "addressCountry": "{{ shop.address.country }}"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "{{ shop.phone }}",
+      "contactType": "customer service"
+    },
+    "sameAs": [
+      "{{ settings.social_facebook_link }}",
+      "{{ settings.social_twitter_link }}",
+      "{{ settings.social_instagram_link }}"
+    ]
+  }
+  </script>
+
+  {% if request.page_type == 'product' %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "{{ product.title | escape }}",
+      "description": "{{ product.description | strip_html | escape }}",
+      "image": "{{ product.featured_media | image_url: width: 800 }}",
+      "brand": {
+        "@type": "Brand",
+        "name": "{{ product.vendor | escape }}"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "{{ product.price | money_without_currency | strip_html }}",
+        "priceCurrency": "{{ cart.currency.iso_code }}",
+        "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+        "url": "{{ product.url }}"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ product.metafields.reviews.rating.value | default: 4.5 }}",
+        "reviewCount": "{{ product.metafields.reviews.rating_count.value | default: 10 }}"
+      }
+    }
+    </script>
+  {% endif %}
+
+  {% if request.page_type == 'collection' %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "{{ collection.title | escape }}",
+      "description": "{{ collection.description | strip_html | escape }}",
+      "url": "{{ collection.url }}",
+      "numberOfItems": "{{ collection.products_count }}"
+    }
+    </script>
+  {% endif %}
+
+  <!-- Enhanced Meta Tags -->
+  <meta name="robots" content="{% if section.settings.robots_index %}index{% else %}noindex{% endif %}, {% if section.settings.robots_follow %}follow{% else %}nofollow{% endif %}">
+  
+  {% if section.settings.canonical_url != blank %}
+    <link rel="canonical" href="{{ section.settings.canonical_url }}">
+  {% endif %}
+
+  {% if section.settings.hreflang_enabled %}
+    {% for locale in shop.enabled_locales %}
+      <link rel="alternate" hreflang="{{ locale.iso_code }}" href="{{ request.origin }}{{ request.path | replace: locale.root_url, '' }}">
+    {% endfor %}
+  {% endif %}
+
+  <!-- Open Graph Enhanced -->
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
+  <meta property="og:title" content="{{ page_title | default: shop.name | escape }}">
+  <meta property="og:description" content="{{ page_description | default: shop.description | escape }}">
+  <meta property="og:url" content="{{ canonical_url | default: request.origin }}">
+  
+  {% if page_image %}
+    <meta property="og:image" content="{{ page_image | image_url: width: 1200 }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+  {% endif %}
+
+  <!-- Twitter Card Enhanced -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title | default: shop.name | escape }}">
+  <meta name="twitter:description" content="{{ page_description | default: shop.description | escape }}">
+  {% if page_image %}
+    <meta name="twitter:image" content="{{ page_image | image_url: width: 1200 }}">
+  {% endif %}
+
+  <!-- Analytics Tracking -->
+  {% if section.settings.enable_analytics %}
+    <div class="seo-analytics" data-analytics hidden>
+      <!-- Google Analytics 4 -->
+      {% if section.settings.ga4_id != blank %}
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ section.settings.ga4_id }}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '{{ section.settings.ga4_id }}', {
+            'custom_map': {
+              'dimension1': 'user_type',
+              'dimension2': 'page_type',
+              'dimension3': 'product_category'
+            }
+          });
+        </script>
+      {% endif %}
+
+      <!-- Facebook Pixel -->
+      {% if section.settings.facebook_pixel_id != blank %}
+        <script>
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '{{ section.settings.facebook_pixel_id }}');
+          fbq('track', 'PageView');
+        </script>
+        <noscript>
+          <img height="1" width="1" style="display:none" 
+               src="https://www.facebook.com/tr?id={{ section.settings.facebook_pixel_id }}&ev=PageView&noscript=1"/>
+        </noscript>
+      {% endif %}
+
+      <!-- Enhanced E-commerce Tracking -->
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Track page views
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+              'page_title': '{{ page_title | escape }}',
+              'page_location': window.location.href,
+              'user_type': '{% if customer %}registered{% else %}guest{% endif %}',
+              'page_type': '{{ request.page_type }}'
+            });
+          }
+
+          // Track product views
+          {% if request.page_type == 'product' %}
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'view_item', {
+                'currency': '{{ cart.currency.iso_code }}',
+                'value': {{ product.price | money_without_currency | strip_html }},
+                'items': [{
+                  'item_id': '{{ product.id }}',
+                  'item_name': '{{ product.title | escape }}',
+                  'item_category': '{{ product.type | escape }}',
+                  'item_brand': '{{ product.vendor | escape }}',
+                  'price': {{ product.price | money_without_currency | strip_html }},
+                  'currency': '{{ cart.currency.iso_code }}'
+                }]
+              });
+            }
+          {% endif %}
+        });
+      </script>
+    </div>
+  {% endif %}
+
+  <!-- Performance Monitoring -->
+  {% if section.settings.enable_performance_monitoring %}
+    <script>
+      // Web Vitals monitoring
+      if ('PerformanceObserver' in window) {
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.name === 'first-contentful-paint') {
+              if (typeof gtag !== 'undefined') {
+                gtag('event', 'timing_complete', {
+                  'name': 'fcp',
+                  'value': Math.round(entry.startTime)
+                });
+              }
+            }
+          }
+        });
+        observer.observe({ entryTypes: ['paint'] });
+      }
+    </script>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "SEO Optimizer",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Search Engine Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "robots_index",
+      "label": "Allow Indexing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "robots_follow",
+      "label": "Allow Following Links",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "canonical_url",
+      "label": "Canonical URL (optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "hreflang_enabled",
+      "label": "Enable Hreflang Tags",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Analytics Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_analytics",
+      "label": "Enable Analytics",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "ga4_id",
+      "label": "Google Analytics 4 ID",
+      "info": "G-XXXXXXXXXX"
+    },
+    {
+      "type": "text",
+      "id": "facebook_pixel_id",
+      "label": "Facebook Pixel ID",
+      "info": "XXXXXXXXXX"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_performance_monitoring",
+      "label": "Enable Performance Monitoring",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Structured Data"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_structured_data",
+      "label": "Enable Structured Data",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_product_schema",
+      "label": "Enable Product Schema",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_collection_schema",
+      "label": "Enable Collection Schema",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_open_graph",
+      "label": "Enable Open Graph",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_twitter_cards",
+      "label": "Enable Twitter Cards",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "SEO Optimizer"
+    }
+  ]
+}
+{% endschema %} 

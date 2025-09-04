@@ -1,0 +1,331 @@
+{% comment %}
+  Security & Compliance Section
+  Advanced security and compliance features based on awesome-shopify best practices
+{% endcomment %}
+
+<div class="security-compliance" data-security-compliance>
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+  <!-- GDPR Cookie Consent -->
+  {% if section.settings.enable_gdpr %}
+    <div class="gdpr-consent" data-gdpr-consent {% if customer.metafields.gdpr.consent_given %}style="display: none;"{% endif %}>
+      <div class="gdpr-consent__overlay"></div>
+      <div class="gdpr-consent__modal">
+        <div class="gdpr-consent__header">
+          <h3 class="gdpr-consent__title">{{ 'sections.security_compliance.cookie_consent_title' | t }}</h3>
+          <button class="gdpr-consent__close" data-gdpr-close aria-label="{{ 'sections.security_compliance.close' | t }}">
+            {%- render 'icon-close' -%}
+          </button>
+        </div>
+        
+        <div class="gdpr-consent__content">
+          <p class="gdpr-consent__description">{{ 'sections.security_compliance.cookie_consent_description' | t }}</p>
+          
+          <div class="gdpr-consent__categories">
+            <div class="gdpr-consent__category">
+              <label class="gdpr-consent__checkbox">
+                <input type="checkbox" checked disabled>
+                <span class="gdpr-consent__checkbox-text">{{ 'sections.security_compliance.essential_cookies' | t }}</span>
+              </label>
+              <p class="gdpr-consent__category-description">{{ 'sections.security_compliance.essential_cookies_description' | t }}</p>
+            </div>
+            
+            <div class="gdpr-consent__category">
+              <label class="gdpr-consent__checkbox">
+                <input type="checkbox" data-gdpr-analytics>
+                <span class="gdpr-consent__checkbox-text">{{ 'sections.security_compliance.analytics_cookies' | t }}</span>
+              </label>
+              <p class="gdpr-consent__category-description">{{ 'sections.security_compliance.analytics_cookies_description' | t }}</p>
+            </div>
+            
+            <div class="gdpr-consent__category">
+              <label class="gdpr-consent__checkbox">
+                <input type="checkbox" data-gdpr-marketing>
+                <span class="gdpr-consent__checkbox-text">{{ 'sections.security_compliance.marketing_cookies' | t }}</span>
+              </label>
+              <p class="gdpr-consent__category-description">{{ 'sections.security_compliance.marketing_cookies_description' | t }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="gdpr-consent__actions">
+          <button class="gdpr-consent__button gdpr-consent__button--accept" data-gdpr-accept>
+            {{ 'sections.security_compliance.accept_all' | t }}
+          </button>
+          <button class="gdpr-consent__button gdpr-consent__button--save" data-gdpr-save>
+            {{ 'sections.security_compliance.save_preferences' | t }}
+          </button>
+          <button class="gdpr-consent__button gdpr-consent__button--reject" data-gdpr-reject>
+            {{ 'sections.security_compliance.reject_all' | t }}
+          </button>
+        </div>
+        
+        <div class="gdpr-consent__footer">
+          <a href="{{ section.settings.privacy_policy_url | default: '/pages/privacy-policy' }}" class="gdpr-consent__link">
+            {{ 'sections.security_compliance.privacy_policy' | t }}
+          </a>
+          <a href="{{ section.settings.cookie_policy_url | default: '/pages/cookie-policy' }}" class="gdpr-consent__link">
+            {{ 'sections.security_compliance.cookie_policy' | t }}
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- CCPA Privacy Notice -->
+  {% if section.settings.enable_ccpa %}
+    <div class="ccpa-notice" data-ccpa-notice {% if customer.metafields.ccpa.notice_shown %}style="display: none;"{% endif %}>
+      <div class="ccpa-notice__content">
+        <p class="ccpa-notice__text">{{ 'sections.security_compliance.ccpa_notice' | t }}</p>
+        <div class="ccpa-notice__actions">
+          <button class="ccpa-notice__button" data-ccpa-opt-out>
+            {{ 'sections.security_compliance.do_not_sell' | t }}
+          </button>
+          <button class="ccpa-notice__button" data-ccpa-close>
+            {{ 'sections.security_compliance.close' | t }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Data Request Form -->
+  {% if section.settings.enable_data_requests %}
+    <div class="data-request" data-data-request>
+      <div class="data-request__modal" hidden>
+        <div class="data-request__overlay"></div>
+        <div class="data-request__content">
+          <div class="data-request__header">
+            <h3 class="data-request__title">{{ 'sections.security_compliance.data_request_title' | t }}</h3>
+            <button class="data-request__close" data-data-request-close>
+              {%- render 'icon-close' -%}
+            </button>
+          </div>
+          
+          <form class="data-request__form" data-data-request-form>
+            <div class="data-request__field">
+              <label for="data-request-email" class="data-request__label">{{ 'sections.security_compliance.email' | t }}</label>
+              <input type="email" id="data-request-email" name="email" required class="data-request__input">
+            </div>
+            
+            <div class="data-request__field">
+              <label for="data-request-type" class="data-request__label">{{ 'sections.security_compliance.request_type' | t }}</label>
+              <select id="data-request-type" name="request_type" required class="data-request__select">
+                <option value="">{{ 'sections.security_compliance.select_request_type' | t }}</option>
+                <option value="access">{{ 'sections.security_compliance.access_data' | t }}</option>
+                <option value="delete">{{ 'sections.security_compliance.delete_data' | t }}</option>
+                <option value="portability">{{ 'sections.security_compliance.data_portability' | t }}</option>
+              </select>
+            </div>
+            
+            <div class="data-request__field">
+              <label for="data-request-reason" class="data-request__label">{{ 'sections.security_compliance.reason' | t }}</label>
+              <textarea id="data-request-reason" name="reason" class="data-request__textarea" rows="3"></textarea>
+            </div>
+            
+            <div class="data-request__actions">
+              <button type="submit" class="data-request__submit">
+                {{ 'sections.security_compliance.submit_request' | t }}
+              </button>
+              <button type="button" class="data-request__cancel" data-data-request-cancel>
+                {{ 'sections.security_compliance.cancel' | t }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Security Features -->
+  {% if section.settings.enable_security_features %}
+    <div class="security-features" data-security-features>
+      <!-- CSRF Protection -->
+      <meta name="csrf-token" content="{{ csrf_token }}">
+      
+      <!-- Rate Limiting -->
+      <div class="rate-limit" data-rate-limit hidden>
+        <div class="rate-limit__message">
+          {{ 'sections.security_compliance.rate_limit_message' | t }}
+        </div>
+      </div>
+      
+      <!-- Fraud Detection -->
+      <div class="fraud-detection" data-fraud-detection hidden>
+        <div class="fraud-detection__message">
+          {{ 'sections.security_compliance.fraud_detection_message' | t }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Privacy Controls -->
+  {% if section.settings.enable_privacy_controls %}
+    <div class="privacy-controls" data-privacy-controls>
+      <button class="privacy-controls__button" data-privacy-controls-toggle>
+        {{ 'sections.security_compliance.privacy_settings' | t }}
+      </button>
+      
+      <div class="privacy-controls__panel" hidden>
+        <div class="privacy-controls__section">
+          <h4 class="privacy-controls__section-title">{{ 'sections.security_compliance.data_collection' | t }}</h4>
+          <div class="privacy-controls__options">
+            <label class="privacy-controls__option">
+              <input type="checkbox" data-privacy-analytics>
+              {{ 'sections.security_compliance.allow_analytics' | t }}
+            </label>
+            <label class="privacy-controls__option">
+              <input type="checkbox" data-privacy-marketing>
+              {{ 'sections.security_compliance.allow_marketing' | t }}
+            </label>
+            <label class="privacy-controls__option">
+              <input type="checkbox" data-privacy-personalization>
+              {{ 'sections.security_compliance.allow_personalization' | t }}
+            </label>
+          </div>
+        </div>
+        
+        <div class="privacy-controls__section">
+          <h4 class="privacy-controls__section-title">{{ 'sections.security_compliance.data_retention' | t }}</h4>
+          <div class="privacy-controls__options">
+            <label class="privacy-controls__option">
+              <input type="radio" name="retention" value="30" data-privacy-retention>
+              {{ 'sections.security_compliance.retention_30_days' | t }}
+            </label>
+            <label class="privacy-controls__option">
+              <input type="radio" name="retention" value="90" data-privacy-retention>
+              {{ 'sections.security_compliance.retention_90_days' | t }}
+            </label>
+            <label class="privacy-controls__option">
+              <input type="radio" name="retention" value="365" data-privacy-retention>
+              {{ 'sections.security_compliance.retention_1_year' | t }}
+            </label>
+          </div>
+        </div>
+        
+        <div class="privacy-controls__actions">
+          <button class="privacy-controls__save" data-privacy-controls-save>
+            {{ 'sections.security_compliance.save_preferences' | t }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Security & Compliance",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "GDPR Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_gdpr",
+      "label": "Enable GDPR Compliance",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "privacy_policy_url",
+      "label": "Privacy Policy URL"
+    },
+    {
+      "type": "url",
+      "id": "cookie_policy_url",
+      "label": "Cookie Policy URL"
+    },
+    {
+      "type": "header",
+      "content": "CCPA Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_ccpa",
+      "label": "Enable CCPA Compliance",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Data Requests"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_data_requests",
+      "label": "Enable Data Request Form",
+      "default": true
+    },
+    {
+      "type": "email",
+      "id": "data_request_email",
+      "label": "Data Request Email"
+    },
+    {
+      "type": "header",
+      "content": "Security Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_security_features",
+      "label": "Enable Security Features",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_rate_limiting",
+      "label": "Enable Rate Limiting",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_fraud_detection",
+      "label": "Enable Fraud Detection",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Privacy Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_privacy_controls",
+      "label": "Enable Privacy Controls",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "default_retention_period",
+      "label": "Default Data Retention Period",
+      "options": [
+        {
+          "value": "30",
+          "label": "30 Days"
+        },
+        {
+          "value": "90",
+          "label": "90 Days"
+        },
+        {
+          "value": "365",
+          "label": "1 Year"
+        }
+      ],
+      "default": "90"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Security & Compliance"
+    }
+  ]
+}
+{% endschema %} 

@@ -1,0 +1,311 @@
+{{ 'component-countdown-timer.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-countdown-timer {
+    --countdown-timer-size: {{ section.settings.timer_size }}px;
+    --countdown-timer-spacing: {{ section.settings.spacing }}px;
+    --countdown-timer-color: {{ section.settings.text_color }};
+    --countdown-timer-background: {{ section.settings.background_color }};
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-countdown-timer {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-countdown-timer">
+  <countdown-timer
+    class="countdown-timer"
+    data-section="{{ section.id }}"
+    data-end-date="{{ section.settings.end_date }}"
+    data-end-time="{{ section.settings.end_time }}"
+    data-timezone="{{ section.settings.timezone }}"
+    data-show-days="{{ section.settings.show_days }}"
+    data-show-hours="{{ section.settings.show_hours }}"
+    data-show-minutes="{{ section.settings.show_minutes }}"
+    data-show-seconds="{{ section.settings.show_seconds }}"
+    data-hide-when-expired="{{ section.settings.hide_when_expired }}"
+    data-expired-message="{{ section.settings.expired_message }}"
+    data-auto-restart="{{ section.settings.auto_restart }}"
+    data-restart-interval="{{ section.settings.restart_interval }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    {% if section.settings.heading != blank %}
+      <div class="countdown-timer__header">
+        <h2 class="countdown-timer__heading">
+          {{ section.settings.heading | escape }}
+        </h2>
+        {% if section.settings.subheading != blank %}
+          <p class="countdown-timer__subheading">
+            {{ section.settings.subheading | escape }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="countdown-timer__content">
+      <div class="countdown-timer__timer">
+        {% if section.settings.show_days %}
+          <div class="countdown-timer__unit countdown-timer__unit--days">
+            <div class="countdown-timer__number" data-days>00</div>
+            <div class="countdown-timer__label">{{ 'sections.countdown_timer.days' | t }}</div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_hours %}
+          <div class="countdown-timer__unit countdown-timer__unit--hours">
+            <div class="countdown-timer__number" data-hours>00</div>
+            <div class="countdown-timer__label">{{ 'sections.countdown_timer.hours' | t }}</div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_minutes %}
+          <div class="countdown-timer__unit countdown-timer__unit--minutes">
+            <div class="countdown-timer__number" data-minutes>00</div>
+            <div class="countdown-timer__label">{{ 'sections.countdown_timer.minutes' | t }}</div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_seconds %}
+          <div class="countdown-timer__unit countdown-timer__unit--seconds">
+            <div class="countdown-timer__number" data-seconds>00</div>
+            <div class="countdown-timer__label">{{ 'sections.countdown_timer.seconds' | t }}</div>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_progress_bar %}
+        <div class="countdown-timer__progress">
+          <div class="countdown-timer__progress-bar">
+            <div class="countdown-timer__progress-fill" data-progress-fill></div>
+          </div>
+          <div class="countdown-timer__progress-text" data-progress-text>0%</div>
+        </div>
+      {% endif %}
+
+      <div class="countdown-timer__expired" data-expired-message style="display: none;">
+        {{ section.settings.expired_message | default: 'sections.countdown_timer.expired_message' | t }}
+      </div>
+    </div>
+
+    {% if section.settings.show_cta and section.settings.cta_text != blank and section.settings.cta_link != blank %}
+      <div class="countdown-timer__actions">
+        <a
+          href="{{ section.settings.cta_link }}"
+          class="button {% if section.settings.cta_style_secondary %}button--secondary{% endif %}"
+          {% if section.settings.cta_external %}target="_blank" rel="noopener"{% endif %}
+        >
+          {{ section.settings.cta_text | escape }}
+        </a>
+      </div>
+    {% endif %}
+  </countdown-timer>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.countdown_timer.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.countdown_timer.settings.content_header.content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.countdown_timer.settings.heading.label",
+      "default": "t:sections.countdown_timer.settings.heading.default"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.countdown_timer.settings.subheading.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown_timer.settings.timer_header.content"
+    },
+    {
+      "type": "date",
+      "id": "end_date",
+      "label": "t:sections.countdown_timer.settings.end_date.label"
+    },
+    {
+      "type": "text",
+      "id": "end_time",
+      "label": "t:sections.countdown_timer.settings.end_time.label",
+      "default": "23:59",
+      "info": "t:sections.countdown_timer.settings.end_time.info"
+    },
+    {
+      "type": "select",
+      "id": "timezone",
+      "options": [
+        {
+          "value": "local",
+          "label": "t:sections.countdown_timer.settings.timezone.options__1.label"
+        },
+        {
+          "value": "UTC",
+          "label": "t:sections.countdown_timer.settings.timezone.options__2.label"
+        }
+      ],
+      "default": "local",
+      "label": "t:sections.countdown_timer.settings.timezone.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown_timer.settings.display_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_days",
+      "default": true,
+      "label": "t:sections.countdown_timer.settings.show_days.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hours",
+      "default": true,
+      "label": "t:sections.countdown_timer.settings.show_hours.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_minutes",
+      "default": true,
+      "label": "t:sections.countdown_timer.settings.show_minutes.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_seconds",
+      "default": true,
+      "label": "t:sections.countdown_timer.settings.show_seconds.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress_bar",
+      "default": false,
+      "label": "t:sections.countdown_timer.settings.show_progress_bar.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown_timer.settings.behavior_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_when_expired",
+      "default": false,
+      "label": "t:sections.countdown_timer.settings.hide_when_expired.label"
+    },
+    {
+      "type": "text",
+      "id": "expired_message",
+      "label": "t:sections.countdown_timer.settings.expired_message.label",
+      "default": "t:sections.countdown_timer.settings.expired_message.default"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_restart",
+      "default": false,
+      "label": "t:sections.countdown_timer.settings.auto_restart.label"
+    },
+    {
+      "type": "range",
+      "id": "restart_interval",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "d",
+      "label": "t:sections.countdown_timer.settings.restart_interval.label",
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown_timer.settings.cta_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "default": false,
+      "label": "t:sections.countdown_timer.settings.show_cta.label"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "t:sections.countdown_timer.settings.cta_text.label"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "t:sections.countdown_timer.settings.cta_link.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "cta_style_secondary",
+      "default": false,
+      "label": "t:sections.countdown_timer.settings.cta_style_secondary.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "cta_external",
+      "default": false,
+      "label": "t:sections.countdown_timer.settings.cta_external.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown_timer.settings.styling_header.content"
+    },
+    {
+      "type": "range",
+      "id": "timer_size",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "t:sections.countdown_timer.settings.timer_size.label",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.countdown_timer.settings.spacing.label",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.countdown_timer.settings.text_color.label",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.countdown_timer.settings.background_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.countdown_timer.settings.hide_on_mobile.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.countdown_timer.presets.name"
+    }
+  ]
+}
+{% endschema %} 

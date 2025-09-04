@@ -1,0 +1,157 @@
+/* Performance Optimizer Component */
+
+.performance-optimizer {
+  position: relative;
+}
+
+/* Lazy Loading Styles */
+.lazy-load {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  filter: blur(5px);
+}
+
+.lazy-load.loaded {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.lazy-load-wrapper {
+  display: grid;
+  gap: 1rem;
+}
+
+.lazy-image-block {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.optimized-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.optimized-image:hover {
+  transform: scale(1.05);
+}
+
+.lazy-video-block {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lazy-video-block video {
+  width: 100%;
+  height: auto;
+}
+
+/* Performance Monitoring */
+.performance-optimizer__metrics {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.performance-optimizer__metrics .metric {
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.performance-optimizer__metrics .metric:last-child {
+  margin-bottom: 0;
+}
+
+/* Resource Preloader */
+.performance-optimizer__preloader {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
+/* Loading States */
+.lazy-load-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .performance-optimizer__metrics {
+    bottom: 10px;
+    right: 10px;
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    max-width: 250px;
+  }
+  
+  .lazy-load-wrapper {
+    gap: 0.5rem;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .lazy-load {
+    filter: none;
+  }
+  
+  .performance-optimizer__metrics {
+    background: #000;
+    border: 2px solid #fff;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .lazy-load {
+    transition: none;
+  }
+  
+  .optimized-image:hover {
+    transform: none;
+  }
+  
+  .lazy-load-wrapper::before {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .performance-optimizer__metrics,
+  .lazy-load-wrapper::before {
+    display: none;
+  }
+  
+  .lazy-load {
+    opacity: 1;
+    filter: none;
+  }
+} 

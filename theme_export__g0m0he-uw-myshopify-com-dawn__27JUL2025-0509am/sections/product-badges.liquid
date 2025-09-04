@@ -1,0 +1,202 @@
+{{ 'component-product-badges.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'product-badges.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-product-badges {
+    --product-badges-position: {{ section.settings.position }};
+    --product-badges-style: {{ section.settings.badge_style }};
+    --product-badges-z-index: 10;
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-product-badges {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-product-badges">
+  <product-badges
+    class="product-badges"
+    data-product-id="{{ product.id | default: '' }}"
+    data-position="{{ section.settings.position }}"
+    data-badge-style="{{ section.settings.badge_style }}"
+    data-sale-badge-type="{{ section.settings.sale_badge_type }}"
+    data-new-product-days="{{ section.settings.new_product_days }}"
+    data-low-stock-threshold="{{ section.settings.low_stock_threshold }}"
+    data-show-stock-count="{{ section.settings.show_stock_count }}"
+    data-custom-badge-text="{{ section.settings.custom_badge_text }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    {% comment %}Badges will be dynamically rendered by JavaScript{% endcomment %}
+  </product-badges>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.product_badges.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.product_badges.settings.badge_types_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sale_badge",
+      "default": true,
+      "label": "t:sections.product_badges.settings.enable_sale_badge.label"
+    },
+    {
+      "type": "select",
+      "id": "sale_badge_type",
+      "options": [
+        {
+          "value": "text",
+          "label": "t:sections.product_badges.settings.sale_badge_type.options__1.label"
+        },
+        {
+          "value": "percentage",
+          "label": "t:sections.product_badges.settings.sale_badge_type.options__2.label"
+        },
+        {
+          "value": "amount",
+          "label": "t:sections.product_badges.settings.sale_badge_type.options__3.label"
+        }
+      ],
+      "default": "percentage",
+      "label": "t:sections.product_badges.settings.sale_badge_type.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_new_badge",
+      "default": true,
+      "label": "t:sections.product_badges.settings.enable_new_badge.label"
+    },
+    {
+      "type": "range",
+      "id": "new_product_days",
+      "min": 1,
+      "max": 90,
+      "step": 1,
+      "unit": "d",
+      "label": "t:sections.product_badges.settings.new_product_days.label",
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sold_out_badge",
+      "default": true,
+      "label": "t:sections.product_badges.settings.enable_sold_out_badge.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_low_stock_badge",
+      "default": true,
+      "label": "t:sections.product_badges.settings.enable_low_stock_badge.label"
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "label": "t:sections.product_badges.settings.low_stock_threshold.label",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock_count",
+      "default": false,
+      "label": "t:sections.product_badges.settings.show_stock_count.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pre_order_badge",
+      "default": true,
+      "label": "t:sections.product_badges.settings.enable_pre_order_badge.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_back_in_stock_badge",
+      "default": true,
+      "label": "t:sections.product_badges.settings.enable_back_in_stock_badge.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_badge",
+      "default": false,
+      "label": "t:sections.product_badges.settings.enable_custom_badge.label"
+    },
+    {
+      "type": "text",
+      "id": "custom_badge_text",
+      "label": "t:sections.product_badges.settings.custom_badge_text.label",
+      "default": "Special"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.product_badges.settings.display_header.content"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "t:sections.product_badges.settings.position.options__1.label"
+        },
+        {
+          "value": "top-right",
+          "label": "t:sections.product_badges.settings.position.options__2.label"
+        },
+        {
+          "value": "bottom-left",
+          "label": "t:sections.product_badges.settings.position.options__3.label"
+        },
+        {
+          "value": "bottom-right",
+          "label": "t:sections.product_badges.settings.position.options__4.label"
+        }
+      ],
+      "default": "top-left",
+      "label": "t:sections.product_badges.settings.position.label"
+    },
+    {
+      "type": "select",
+      "id": "badge_style",
+      "options": [
+        {
+          "value": "rounded",
+          "label": "t:sections.product_badges.settings.badge_style.options__1.label"
+        },
+        {
+          "value": "pill",
+          "label": "t:sections.product_badges.settings.badge_style.options__2.label"
+        },
+        {
+          "value": "ribbon",
+          "label": "t:sections.product_badges.settings.badge_style.options__3.label"
+        }
+      ],
+      "default": "rounded",
+      "label": "t:sections.product_badges.settings.badge_style.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.product_badges.settings.hide_on_mobile.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_badges.presets.name"
+    }
+  ]
+}
+{% endschema %} 

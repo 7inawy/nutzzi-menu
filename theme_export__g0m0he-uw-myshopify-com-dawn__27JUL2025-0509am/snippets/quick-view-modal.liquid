@@ -1,0 +1,174 @@
+{% comment %}
+  Renders a quick view modal for product preview
+
+  Accepts:
+  - product: {Object} Product Liquid object
+  - modal_id: {String} Unique modal ID
+
+  Usage:
+  {% render 'quick-view-modal', product: product, modal_id: 'quick-view-modal-1' %}
+{% endcomment %}
+
+<quick-view-modal
+  id="{{ modal_id }}"
+  class="quick-view-modal modal"
+  data-product-id="{{ product.id }}"
+  data-product-url="{{ product.url }}"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="{{ modal_id }}-title"
+  aria-describedby="{{ modal_id }}-description"
+>
+  <div class="modal__overlay" data-modal-close></div>
+  
+  <div class="modal__content modal--large">
+    <div class="modal__header">
+      <h2 id="{{ modal_id }}-title" class="modal__title">
+        {{ 'products.product.quick_view_title' | t: product: product.title }}
+      </h2>
+      <button
+        type="button"
+        class="modal__close"
+        data-modal-close
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        <svg class="icon icon-close" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal__body">
+      <div class="quick-view-modal__product">
+        <div class="quick-view-modal__gallery">
+          <div class="quick-view-modal__main-image">
+            <img
+              src="{{ product.featured_media | image_url: width: 600 }}"
+              alt="{{ product.featured_media.alt | escape }}"
+              loading="lazy"
+              width="{{ product.featured_media.width }}"
+              height="{{ product.featured_media.height }}"
+              class="quick-view-modal__image"
+            >
+          </div>
+          
+          {% if product.media.size > 1 %}
+            <div class="quick-view-modal__thumbnails">
+              {% for media in product.media limit: 5 %}
+                <button
+                  type="button"
+                  class="quick-view-modal__thumbnail"
+                  data-media-id="{{ media.id }}"
+                  data-media-url="{{ media | image_url: width: 600 }}"
+                  aria-label="{{ 'products.product.load_image' | t: index: forloop.index }}"
+                >
+                  <img
+                    src="{{ media | image_url: width: 100 }}"
+                    alt="{{ media.alt | escape }}"
+                    loading="lazy"
+                    width="100"
+                    height="100"
+                  >
+                </button>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="quick-view-modal__info">
+          <div class="quick-view-modal__header">
+            <h3 class="quick-view-modal__product-title">{{ product.title }}</h3>
+            
+            {% if product.vendor %}
+              <p class="quick-view-modal__vendor">{{ product.vendor }}</p>
+            {% endif %}
+
+            <div class="quick-view-modal__price">
+              {% render 'price', product: product %}
+            </div>
+
+            {% if product.available %}
+              <div class="quick-view-modal__availability">
+                <span class="quick-view-modal__availability-text available">
+                  {{ 'products.product.inventory_in_stock' | t }}
+                </span>
+              </div>
+            {% else %}
+              <div class="quick-view-modal__availability">
+                <span class="quick-view-modal__availability-text unavailable">
+                  {{ 'products.product.sold_out' | t }}
+                </span>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="quick-view-modal__description">
+            <h4 class="quick-view-modal__description-title">{{ 'products.product.description' | t }}</h4>
+            <div class="quick-view-modal__description-content">
+              {{ product.description | strip_html | truncate: 300 }}
+            </div>
+          </div>
+
+          {% if product.type %}
+            <div class="quick-view-modal__type">
+              <span class="quick-view-modal__type-label">{{ 'products.product.type' | t }}:</span>
+              <span class="quick-view-modal__type-value">{{ product.type }}</span>
+            </div>
+          {% endif %}
+
+          {% if product.tags.size > 0 %}
+            <div class="quick-view-modal__tags">
+              <span class="quick-view-modal__tags-label">{{ 'products.product.tags' | t }}:</span>
+              <div class="quick-view-modal__tags-list">
+                {% for tag in product.tags limit: 5 %}
+                  <span class="quick-view-modal__tag">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% unless product.has_only_default_variant %}
+            <div class="quick-view-modal__variants">
+              <h4 class="quick-view-modal__variants-title">{{ 'products.product.variants' | t }}</h4>
+              <div class="quick-view-modal__variants-list">
+                {% for option in product.options_with_values %}
+                  <div class="quick-view-modal__option">
+                    <span class="quick-view-modal__option-name">{{ option.name }}:</span>
+                    <div class="quick-view-modal__option-values">
+                      {% for value in option.values %}
+                        <span class="quick-view-modal__option-value">{{ value }}</span>
+                        {% unless forloop.last %}, {% endunless %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endunless %}
+
+          <div class="quick-view-modal__actions">
+            <a
+              href="{{ product.url }}"
+              class="button button--full-width button--primary quick-view-modal__view-details"
+            >
+              {{ 'products.product.view_full_details' | t }}
+            </a>
+            
+            {% if product.available %}
+              <button
+                type="button"
+                class="button button--full-width button--secondary quick-view-modal__add-to-cart"
+                data-product-id="{{ product.id }}"
+              >
+                <svg class="icon icon-cart" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+                {{ 'products.product.add_to_cart' | t }}
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</quick-view-modal> 

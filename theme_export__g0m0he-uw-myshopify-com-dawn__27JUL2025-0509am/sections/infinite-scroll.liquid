@@ -1,0 +1,244 @@
+{% comment %}
+  Renders an infinite scroll component for enhanced product loading.
+
+  Usage:
+  {% render 'infinite-scroll' %}
+{% endcomment %}
+
+{{ 'component-infinite-scroll.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'infinite-scroll.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-infinite-scroll {
+    --infinite-scroll-threshold: {{ section.settings.scroll_threshold }}px;
+    --infinite-scroll-delay: {{ section.settings.loading_delay }}ms;
+    --infinite-scroll-animation-duration: {{ section.settings.animation_duration }}ms;
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-infinite-scroll {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-infinite-scroll">
+  <infinite-scroll
+    class="infinite-scroll"
+    data-section="{{ section.id }}"
+    data-collection="{{ collection.handle }}"
+    data-current-page="{{ paginate.current_page }}"
+    data-total-pages="{{ paginate.pages }}"
+    data-products-per-page="{{ paginate.page_size }}"
+    data-total-products="{{ paginate.total }}"
+    data-loading-delay="{{ section.settings.loading_delay }}"
+    data-scroll-threshold="{{ section.settings.scroll_threshold }}"
+    data-auto-load="{{ section.settings.auto_load }}"
+    data-show-loading-indicator="{{ section.settings.show_loading_indicator }}"
+    data-show-end-message="{{ section.settings.show_end_message }}"
+    data-url="{{ request.url }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    <!-- Product Grid Container -->
+    <div class="infinite-scroll__container" data-infinite-scroll-container>
+      <!-- Existing products will be loaded here -->
+    </div>
+
+    <!-- Loading Indicator -->
+    {% if section.settings.show_loading_indicator %}
+      <div class="infinite-scroll__loading" data-infinite-scroll-loading>
+        <div class="infinite-scroll__loading-content">
+          <div class="infinite-scroll__loading-spinner">
+            {%- render 'loading-spinner' -%}
+          </div>
+          <p class="infinite-scroll__loading-text">{{ 'sections.infinite_scroll.loading' | t }}</p>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Load More Button (Alternative to auto-load) -->
+    {% unless section.settings.auto_load %}
+      <div class="infinite-scroll__load-more" data-infinite-scroll-load-more>
+        <button
+          type="button"
+          class="infinite-scroll__load-more-button button button--primary"
+          data-infinite-scroll-load-more-button
+          aria-label="{{ 'sections.infinite_scroll.load_more' | t }}"
+        >
+          <span class="infinite-scroll__load-more-text">{{ 'sections.infinite_scroll.load_more' | t }}</span>
+          <span class="infinite-scroll__load-more-count" data-infinite-scroll-remaining-count></span>
+        </button>
+      </div>
+    {% endunless %}
+
+    <!-- End Message -->
+    {% if section.settings.show_end_message %}
+      <div class="infinite-scroll__end" data-infinite-scroll-end>
+        <div class="infinite-scroll__end-content">
+          <div class="infinite-scroll__end-icon">
+            {{ 'icon-checkmark.svg' | inline_asset_content }}
+          </div>
+          <h3 class="infinite-scroll__end-title">{{ 'sections.infinite_scroll.end_title' | t }}</h3>
+          <p class="infinite-scroll__end-text">{{ 'sections.infinite_scroll.end_text' | t: total: paginate.total }}</p>
+          <div class="infinite-scroll__end-actions">
+            <a href="{{ routes.collections_url }}" class="button button--secondary">
+              {{ 'sections.infinite_scroll.browse_collections' | t }}
+            </a>
+            <button
+              type="button"
+              class="button button--outline"
+              data-infinite-scroll-reset
+              aria-label="{{ 'sections.infinite_scroll.reset' | t }}"
+            >
+              {{ 'sections.infinite_scroll.reset' | t }}
+            </button>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Error State -->
+    <div class="infinite-scroll__error" data-infinite-scroll-error>
+      <div class="infinite-scroll__error-content">
+        <div class="infinite-scroll__error-icon">
+          {{ 'icon-error.svg' | inline_asset_content }}
+        </div>
+        <h3 class="infinite-scroll__error-title">{{ 'sections.infinite_scroll.error_title' | t }}</h3>
+        <p class="infinite-scroll__error-text">{{ 'sections.infinite_scroll.error_text' | t }}</p>
+        <button
+          type="button"
+          class="button button--primary"
+          data-infinite-scroll-retry
+          aria-label="{{ 'sections.infinite_scroll.retry' | t }}"
+        >
+          {{ 'sections.infinite_scroll.retry' | t }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    {% if section.settings.show_progress %}
+      <div class="infinite-scroll__progress" data-infinite-scroll-progress>
+        <div class="infinite-scroll__progress-bar">
+          <div class="infinite-scroll__progress-fill" data-infinite-scroll-progress-fill></div>
+        </div>
+        <p class="infinite-scroll__progress-text" data-infinite-scroll-progress-text>
+          {{ 'sections.infinite_scroll.progress' | t: current: paginate.current_page, total: paginate.pages }}
+        </p>
+      </div>
+    {% endif %}
+  </infinite-scroll>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.infinite_scroll.name",
+  "class": "section-infinite-scroll",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.infinite_scroll.settings.header__behavior.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_load",
+      "default": true,
+      "label": "t:sections.infinite_scroll.settings.auto_load.label",
+      "info": "t:sections.infinite_scroll.settings.auto_load.info"
+    },
+    {
+      "type": "range",
+      "id": "scroll_threshold",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "unit": "px",
+      "label": "t:sections.infinite_scroll.settings.scroll_threshold.label",
+      "default": 200,
+      "info": "t:sections.infinite_scroll.settings.scroll_threshold.info"
+    },
+    {
+      "type": "range",
+      "id": "loading_delay",
+      "min": 0,
+      "max": 2000,
+      "step": 100,
+      "unit": "ms",
+      "label": "t:sections.infinite_scroll.settings.loading_delay.label",
+      "default": 500,
+      "info": "t:sections.infinite_scroll.settings.loading_delay.info"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 200,
+      "max": 1000,
+      "step": 100,
+      "unit": "ms",
+      "label": "t:sections.infinite_scroll.settings.animation_duration.label",
+      "default": 400,
+      "info": "t:sections.infinite_scroll.settings.animation_duration.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.infinite_scroll.settings.header__ui.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_loading_indicator",
+      "default": true,
+      "label": "t:sections.infinite_scroll.settings.show_loading_indicator.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_end_message",
+      "default": true,
+      "label": "t:sections.infinite_scroll.settings.show_end_message.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress",
+      "default": false,
+      "label": "t:sections.infinite_scroll.settings.show_progress.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.infinite_scroll.settings.hide_on_mobile.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.infinite_scroll.settings.margin_top.label",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.infinite_scroll.settings.margin_bottom.label",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.infinite_scroll.presets.name"
+    }
+  ]
+}
+{% endschema %} 

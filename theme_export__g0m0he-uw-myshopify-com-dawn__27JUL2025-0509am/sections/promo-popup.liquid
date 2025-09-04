@@ -1,0 +1,287 @@
+{{ 'component-promo-popup.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'promo-popup.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-promo-popup {
+    --popup-width: {{ section.settings.popup_width }}px;
+    --popup-delay: {{ section.settings.delay }}s;
+    --popup-duration: {{ section.settings.duration }}s;
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-promo-popup {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-promo-popup">
+  <promo-popup
+    class="promo-popup"
+    data-section="{{ section.id }}"
+    data-delay="{{ section.settings.delay }}"
+    data-duration="{{ section.settings.duration }}"
+    data-trigger="{{ section.settings.trigger }}"
+    data-scroll-percentage="{{ section.settings.scroll_percentage }}"
+    data-exit-intent="{{ section.settings.exit_intent }}"
+    data-show-once="{{ section.settings.show_once }}"
+    data-cookie-duration="{{ section.settings.cookie_duration }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    <div class="promo-popup__overlay" data-popup-close></div>
+    
+    <div class="promo-popup__content" role="dialog" aria-modal="true" aria-labelledby="promo-popup-{{ section.id }}-title">
+      <button
+        type="button"
+        class="promo-popup__close"
+        data-popup-close
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        {%- render 'icon-close' -%}
+      </button>
+
+      <div class="promo-popup__body">
+        {% if section.settings.image %}
+          <div class="promo-popup__image">
+            <img
+              src="{{ section.settings.image | image_url: width: 400 }}"
+              alt="{{ section.settings.image.alt | escape }}"
+              loading="lazy"
+              width="{{ section.settings.image.width }}"
+              height="{{ section.settings.image.height }}"
+            >
+          </div>
+        {% endif %}
+
+        <div class="promo-popup__text">
+          {% if section.settings.heading != blank %}
+            <h2 id="promo-popup-{{ section.id }}-title" class="promo-popup__heading">
+              {{ section.settings.heading | escape }}
+            </h2>
+          {% endif %}
+
+          {% if section.settings.text != blank %}
+            <div class="promo-popup__description">
+              {{ section.settings.text }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+            <div class="promo-popup__actions">
+              <a
+                href="{{ section.settings.button_link }}"
+                class="button {% if section.settings.button_style_secondary %}button--secondary{% endif %}"
+                {% if section.settings.button_external %}target="_blank" rel="noopener"{% endif %}
+              >
+                {{ section.settings.button_label | escape }}
+              </a>
+            </div>
+          {% endif %}
+
+          {% if section.settings.show_newsletter %}
+            <div class="promo-popup__newsletter">
+              <h3 class="promo-popup__newsletter-title">
+                {{ section.settings.newsletter_title | default: 'sections.promo_popup.newsletter_title' | t }}
+              </h3>
+              <p class="promo-popup__newsletter-text">
+                {{ section.settings.newsletter_text | default: 'sections.promo_popup.newsletter_text' | t }}
+              </p>
+              {%- form 'customer', id: 'promo-popup-newsletter-{{ section.id }}', class: 'promo-popup__newsletter-form' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <div class="promo-popup__newsletter-fields">
+                  <input
+                    type="email"
+                    name="contact[email]"
+                    class="promo-popup__newsletter-input"
+                    placeholder="{{ 'sections.promo_popup.newsletter_placeholder' | t }}"
+                    required
+                  >
+                  <button type="submit" class="button promo-popup__newsletter-button">
+                    {{ 'sections.promo_popup.newsletter_button' | t }}
+                  </button>
+                </div>
+              {%- endform -%}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </promo-popup>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.promo_popup.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.promo_popup.settings.content_header.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.promo_popup.settings.image.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "t:sections.promo_popup.settings.heading.default",
+      "label": "t:sections.promo_popup.settings.heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>t:sections.promo_popup.settings.text.default</p>",
+      "label": "t:sections.promo_popup.settings.text.label"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.promo_popup.settings.button_label.label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.promo_popup.settings.button_link.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary",
+      "default": false,
+      "label": "t:sections.promo_popup.settings.button_style_secondary.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_external",
+      "default": false,
+      "label": "t:sections.promo_popup.settings.button_external.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo_popup.settings.newsletter_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "default": false,
+      "label": "t:sections.promo_popup.settings.show_newsletter.label"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "t:sections.promo_popup.settings.newsletter_title.label"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "t:sections.promo_popup.settings.newsletter_text.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo_popup.settings.behavior_header.content"
+    },
+    {
+      "type": "select",
+      "id": "trigger",
+      "options": [
+        {
+          "value": "time",
+          "label": "t:sections.promo_popup.settings.trigger.options__1.label"
+        },
+        {
+          "value": "scroll",
+          "label": "t:sections.promo_popup.settings.trigger.options__2.label"
+        },
+        {
+          "value": "exit",
+          "label": "t:sections.promo_popup.settings.trigger.options__3.label"
+        }
+      ],
+      "default": "time",
+      "label": "t:sections.promo_popup.settings.trigger.label"
+    },
+    {
+      "type": "range",
+      "id": "delay",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "s",
+      "label": "t:sections.promo_popup.settings.delay.label",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "scroll_percentage",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "t:sections.promo_popup.settings.scroll_percentage.label",
+      "default": 50
+    },
+    {
+      "type": "checkbox",
+      "id": "exit_intent",
+      "default": true,
+      "label": "t:sections.promo_popup.settings.exit_intent.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_once",
+      "default": true,
+      "label": "t:sections.promo_popup.settings.show_once.label"
+    },
+    {
+      "type": "range",
+      "id": "cookie_duration",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "d",
+      "label": "t:sections.promo_popup.settings.cookie_duration.label",
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo_popup.settings.styling_header.content"
+    },
+    {
+      "type": "range",
+      "id": "popup_width",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "t:sections.promo_popup.settings.popup_width.label",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "duration",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1,
+      "unit": "s",
+      "label": "t:sections.promo_popup.settings.duration.label",
+      "default": 0.3
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.promo_popup.settings.hide_on_mobile.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.promo_popup.presets.name"
+    }
+  ]
+}
+{% endschema %} 

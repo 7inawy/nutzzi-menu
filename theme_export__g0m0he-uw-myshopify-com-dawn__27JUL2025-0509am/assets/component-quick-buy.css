@@ -1,0 +1,421 @@
+/* Quick Buy Button Styles */
+quick-buy-button {
+  display: block;
+  width: 100%;
+}
+
+.quick-buy-button {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.quick-buy-button__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 4.4rem;
+  padding: 1.2rem 2rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.08);
+  border-radius: 0.4rem;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quick-buy-button__trigger:hover {
+  background: rgba(var(--color-foreground), 0.04);
+  border-color: rgba(var(--color-foreground), 0.12);
+}
+
+.quick-buy-button__trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quick-buy-button__trigger .icon-cart {
+  width: 1.6rem;
+  height: 1.6rem;
+  fill: currentColor;
+}
+
+/* Quick Buy Modal Styles */
+quick-buy-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+quick-buy-modal[open] {
+  display: block;
+}
+
+.quick-buy-modal {
+  backdrop-filter: blur(0.4rem);
+}
+
+.modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(var(--color-foreground), 0.5);
+  cursor: pointer;
+}
+
+.modal__content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 60rem;
+  max-height: 90vh;
+  background: rgb(var(--color-background));
+  border-radius: 0.8rem;
+  box-shadow: 0 2rem 4rem rgba(var(--color-foreground), 0.15);
+  overflow: hidden;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: rgb(var(--color-foreground));
+}
+
+.modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.modal__close:hover {
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+.modal__close .icon-close {
+  width: 1.8rem;
+  height: 1.8rem;
+  fill: rgb(var(--color-foreground));
+}
+
+.modal__body {
+  padding: 2rem;
+  max-height: calc(90vh - 8rem);
+  overflow-y: auto;
+}
+
+/* Quick Buy Modal Product Layout */
+.quick-buy-modal__product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.quick-buy-modal__image {
+  position: relative;
+  border-radius: 0.4rem;
+  overflow: hidden;
+}
+
+.quick-buy-modal__image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.quick-buy-modal__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.quick-buy-modal__product-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: rgb(var(--color-foreground));
+}
+
+.quick-buy-modal__vendor {
+  margin: 0;
+  font-size: 1.2rem;
+  color: rgba(var(--color-foreground), 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+.quick-buy-modal__price {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: rgb(var(--color-foreground));
+}
+
+/* Quick Buy Modal Variants */
+.quick-buy-modal__variants {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.quick-buy-modal__option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.quick-buy-modal__option-label {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: rgb(var(--color-foreground));
+}
+
+.quick-buy-modal__option-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.quick-buy-modal__option-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.quick-buy-modal__option-button {
+  display: inline-block;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.2rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.2);
+  border-radius: 0.4rem;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  min-width: 4rem;
+}
+
+.quick-buy-modal__option-input:checked + .quick-buy-modal__option-button {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border-color: rgb(var(--color-foreground));
+}
+
+.quick-buy-modal__option-button:hover {
+  border-color: rgba(var(--color-foreground), 0.4);
+}
+
+/* Quick Buy Modal Quantity */
+.quick-buy-modal__quantity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.quick-buy-modal__quantity-label {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: rgb(var(--color-foreground));
+}
+
+/* Quick Buy Modal Actions */
+.quick-buy-modal__actions {
+  margin-top: 1rem;
+}
+
+.quick-buy-modal__add-to-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  min-height: 4.8rem;
+  padding: 1.2rem 2rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quick-buy-modal__add-to-cart:hover:not(:disabled) {
+  background: rgba(var(--color-button), 0.8);
+}
+
+.quick-buy-modal__add-to-cart:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quick-buy-modal__button-loading {
+  display: none;
+}
+
+.quick-buy-modal__add-to-cart.loading .quick-buy-modal__button-text {
+  display: none;
+}
+
+.quick-buy-modal__add-to-cart.loading .quick-buy-modal__button-loading {
+  display: inline;
+}
+
+/* Quick Buy Section Styles */
+.quick-buy-section {
+  margin: 0;
+}
+
+.quick-buy-section__title {
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.quick-buy-section__description {
+  margin: 0 0 3rem 0;
+  text-align: center;
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+.quick-buy-container {
+  display: block;
+}
+
+.quick-buy-grid {
+  gap: 2rem;
+}
+
+/* Card Integration */
+.card__quick-buy {
+  margin-top: 1rem;
+}
+
+.card__quick-buy .quick-buy-button__trigger {
+  font-size: 1.2rem;
+  padding: 0.8rem 1.5rem;
+  min-height: 3.8rem;
+}
+
+@media screen and (max-width: 749px) {
+  .card__quick-buy .quick-buy-button__trigger {
+    font-size: 1.1rem;
+    padding: 0.6rem 1.2rem;
+    min-height: 3.4rem;
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 749px) {
+  .modal__content {
+    width: 95%;
+    max-width: none;
+    margin: 2rem;
+  }
+
+  .quick-buy-modal__product {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .quick-buy-modal__image {
+    order: -1;
+  }
+
+  .modal__header {
+    padding: 1.5rem;
+  }
+
+  .modal__body {
+    padding: 1.5rem;
+  }
+
+  .quick-buy-modal__option-values {
+    gap: 0.6rem;
+  }
+
+  .quick-buy-modal__option-button {
+    padding: 0.6rem 1rem;
+    font-size: 1.1rem;
+    min-width: 3.5rem;
+  }
+}
+
+@media screen and (max-width: 989px) {
+  .quick-buy-grid {
+    gap: 1.5rem;
+  }
+}
+
+/* Loading States */
+.quick-buy-button.loading .quick-buy-button__trigger {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.quick-buy-modal.loading .modal__content {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Success/Error States */
+.quick-buy-modal__message {
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.4rem;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.quick-buy-modal__message--success {
+  background: rgba(0, 128, 0, 0.1);
+  color: rgb(0, 128, 0);
+  border: 0.1rem solid rgba(0, 128, 0, 0.2);
+}
+
+.quick-buy-modal__message--error {
+  background: rgba(255, 0, 0, 0.1);
+  color: rgb(255, 0, 0);
+  border: 0.1rem solid rgba(255, 0, 0, 0.2);
+} 

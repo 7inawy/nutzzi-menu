@@ -1,0 +1,747 @@
+{% comment %}
+  Renders a combined listing section for displaying multiple products in one listing.
+
+  Usage:
+  {% render 'combined-listing' %}
+{% endcomment %}
+
+{{ 'component-combined-listing.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'combined-listing.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-combined-listing {
+    --products-per-row: {{ section.settings.products_per_row }};
+    --products-per-row-mobile: {{ section.settings.products_per_row_mobile }};
+    --grid-gap: {{ section.settings.grid_gap }}px;
+    --card-padding: {{ section.settings.card_padding }}px;
+    --border-radius: {{ section.settings.border_radius }}px;
+    --shadow-intensity: {{ section.settings.shadow_intensity }};
+    --hover-scale: {{ section.settings.hover_scale }};
+  }
+
+  {% if section.settings.custom_colors %}
+    .section-{{ section.id }}-combined-listing {
+      --card-background: {{ section.settings.card_background }};
+      --card-border-color: {{ section.settings.card_border_color }};
+      --text-color: {{ section.settings.text_color }};
+      --price-color: {{ section.settings.price_color }};
+      --button-background: {{ section.settings.button_background }};
+      --button-text-color: {{ section.settings.button_text_color }};
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-combined-listing">
+  <combined-listing
+    class="combined-listing"
+    data-section="{{ section.id }}"
+    data-layout="{{ section.settings.layout }}"
+    data-products-per-row="{{ section.settings.products_per_row }}"
+    data-products-per-row-mobile="{{ section.settings.products_per_row_mobile }}"
+    data-show-vendor="{{ section.settings.show_vendor }}"
+    data-show-rating="{{ section.settings.show_rating }}"
+    data-show-quick-add="{{ section.settings.show_quick_add }}"
+    data-show-quick-view="{{ section.settings.show_quick_view }}"
+    data-show-wishlist="{{ section.settings.show_wishlist }}"
+    data-show-compare="{{ section.settings.show_compare }}"
+    data-enable-filters="{{ section.settings.enable_filters }}"
+    data-enable-sorting="{{ section.settings.enable_sorting }}"
+    data-enable-pagination="{{ section.settings.enable_pagination }}"
+    data-products-per-page="{{ section.settings.products_per_page }}"
+  >
+    <!-- Header -->
+    <div class="combined-listing__header">
+      {%- if section.settings.title != blank -%}
+        <h2 class="combined-listing__title">{{ section.settings.title | escape }}</h2>
+      {%- endif -%}
+      
+      {%- if section.settings.description != blank -%}
+        <div class="combined-listing__description">
+          {{ section.settings.description }}
+        </div>
+      {%- endif -%}
+
+      <!-- Controls -->
+      <div class="combined-listing__controls">
+        <!-- Layout Toggle -->
+        {%- if section.settings.enable_layout_toggle -%}
+          <div class="combined-listing__layout-toggle">
+            <button
+              type="button"
+              class="combined-listing__layout-button combined-listing__layout-button--grid"
+              data-layout="grid"
+              aria-label="{{ 'sections.combined_listing.layout_grid' | t }}"
+            >
+              {{ 'icon-grid.svg' | inline_asset_content }}
+            </button>
+            <button
+              type="button"
+              class="combined-listing__layout-button combined-listing__layout-button--list"
+              data-layout="list"
+              aria-label="{{ 'sections.combined_listing.layout_list' | t }}"
+            >
+              {{ 'icon-list.svg' | inline_asset_content }}
+            </button>
+          </div>
+        {%- endif -%}
+
+        <!-- Filters -->
+        {%- if section.settings.enable_filters -%}
+          <div class="combined-listing__filters">
+            <button
+              type="button"
+              class="combined-listing__filter-button"
+              data-filter-toggle
+              aria-label="{{ 'sections.combined_listing.toggle_filters' | t }}"
+            >
+              {{ 'icon-filter.svg' | inline_asset_content }}
+              <span>{{ 'sections.combined_listing.filters' | t }}</span>
+            </button>
+          </div>
+        {%- endif -%}
+
+        <!-- Sort -->
+        {%- if section.settings.enable_sorting -%}
+          <div class="combined-listing__sort">
+            <label for="combined-listing-sort-{{ section.id }}" class="combined-listing__sort-label">
+              {{ 'sections.combined_listing.sort_by' | t }}
+            </label>
+            <select
+              id="combined-listing-sort-{{ section.id }}"
+              class="combined-listing__sort-select"
+              data-sort-select
+            >
+              <option value="manual">{{ 'sections.combined_listing.sort_manual' | t }}</option>
+              <option value="best-selling">{{ 'sections.combined_listing.sort_best_selling' | t }}</option>
+              <option value="title-ascending">{{ 'sections.combined_listing.sort_title_asc' | t }}</option>
+              <option value="title-descending">{{ 'sections.combined_listing.sort_title_desc' | t }}</option>
+              <option value="price-ascending">{{ 'sections.combined_listing.sort_price_asc' | t }}</option>
+              <option value="price-descending">{{ 'sections.combined_listing.sort_price_desc' | t }}</option>
+              <option value="created-ascending">{{ 'sections.combined_listing.sort_created_asc' | t }}</option>
+              <option value="created-descending">{{ 'sections.combined_listing.sort_created_desc' | t }}</option>
+            </select>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Filter Sidebar -->
+    {%- if section.settings.enable_filters -%}
+      <div class="combined-listing__filter-sidebar" data-filter-sidebar>
+        <div class="combined-listing__filter-header">
+          <h3 class="combined-listing__filter-title">{{ 'sections.combined_listing.filters' | t }}</h3>
+          <button
+            type="button"
+            class="combined-listing__filter-close"
+            data-filter-close
+            aria-label="{{ 'accessibility.close' | t }}"
+          >
+            {{ 'icon-close.svg' | inline_asset_content }}
+          </button>
+        </div>
+
+        <div class="combined-listing__filter-content">
+          <!-- Product Type Filter -->
+          <div class="combined-listing__filter-group">
+            <h4 class="combined-listing__filter-group-title">{{ 'sections.combined_listing.filter_product_type' | t }}</h4>
+            <div class="combined-listing__filter-options" data-filter-group="product_type">
+              {%- assign product_types = '' | split: '' -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'product' and block.settings.product != blank -%}
+                  {%- assign product_types = product_types | concat: block.settings.product.type | uniq -%}
+                {%- endif -%}
+              {%- endfor -%}
+              
+              {%- for product_type in product_types -%}
+                <label class="combined-listing__filter-option">
+                  <input
+                    type="checkbox"
+                    value="{{ product_type | escape }}"
+                    data-filter="product_type"
+                    class="combined-listing__filter-checkbox"
+                  >
+                  <span class="combined-listing__filter-checkbox-custom"></span>
+                  <span class="combined-listing__filter-option-text">{{ product_type | escape }}</span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </div>
+
+          <!-- Vendor Filter -->
+          {%- if section.settings.show_vendor -%}
+            <div class="combined-listing__filter-group">
+              <h4 class="combined-listing__filter-group-title">{{ 'sections.combined_listing.filter_vendor' | t }}</h4>
+              <div class="combined-listing__filter-options" data-filter-group="vendor">
+                {%- assign vendors = '' | split: '' -%}
+                {%- for block in section.blocks -%}
+                  {%- if block.type == 'product' and block.settings.product != blank -%}
+                    {%- assign vendors = vendors | concat: block.settings.product.vendor | uniq -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                
+                {%- for vendor in vendors -%}
+                  <label class="combined-listing__filter-option">
+                    <input
+                      type="checkbox"
+                      value="{{ vendor | escape }}"
+                      data-filter="vendor"
+                      class="combined-listing__filter-checkbox"
+                    >
+                    <span class="combined-listing__filter-checkbox-custom"></span>
+                    <span class="combined-listing__filter-option-text">{{ vendor | escape }}</span>
+                  </label>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          <!-- Price Range Filter -->
+          <div class="combined-listing__filter-group">
+            <h4 class="combined-listing__filter-group-title">{{ 'sections.combined_listing.filter_price' | t }}</h4>
+            <div class="combined-listing__filter-price" data-filter-group="price">
+              <div class="combined-listing__price-range">
+                <input
+                  type="range"
+                  min="0"
+                  max="1000"
+                  step="10"
+                  value="0"
+                  class="combined-listing__price-slider"
+                  data-price-min
+                >
+                <input
+                  type="range"
+                  min="0"
+                  max="1000"
+                  step="10"
+                  value="1000"
+                  class="combined-listing__price-slider"
+                  data-price-max
+                >
+              </div>
+              <div class="combined-listing__price-inputs">
+                <input
+                  type="number"
+                  placeholder="0"
+                  class="combined-listing__price-input"
+                  data-price-input-min
+                >
+                <span class="combined-listing__price-separator">-</span>
+                <input
+                  type="number"
+                  placeholder="1000"
+                  class="combined-listing__price-input"
+                  data-price-input-max
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Clear Filters -->
+          <div class="combined-listing__filter-actions">
+            <button
+              type="button"
+              class="combined-listing__filter-clear"
+              data-filter-clear
+            >
+              {{ 'sections.combined_listing.clear_filters' | t }}
+            </button>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <!-- Products Grid -->
+    <div class="combined-listing__container">
+      <div class="combined-listing__products" data-products-grid>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product' and block.settings.product != blank -%}
+            {%- assign product = block.settings.product -%}
+            <div
+              class="combined-listing__product"
+              data-product
+              data-product-id="{{ product.id }}"
+              data-product-type="{{ product.type | escape }}"
+              data-product-vendor="{{ product.vendor | escape }}"
+              data-product-price="{{ product.price | money_without_currency | replace: ',', '' }}"
+              data-product-available="{{ product.available }}"
+            >
+              <!-- Product Image -->
+              <div class="combined-listing__product-image">
+                <a href="{{ product.url }}" class="combined-listing__product-link">
+                  {%- if product.featured_media -%}
+                    {{ product.featured_media | image_url: width: 400 | image_tag: 
+                      class: 'combined-listing__product-img',
+                      loading: 'lazy',
+                      alt: product.featured_media.alt | escape
+                    }}
+                  {%- else -%}
+                    <div class="combined-listing__product-placeholder">
+                      {{ 'image' | placeholder_svg_tag: 'combined-listing__product-placeholder-svg' }}
+                    </div>
+                  {%- endif -%}
+                </a>
+
+                <!-- Quick Actions -->
+                <div class="combined-listing__product-actions">
+                  {%- if section.settings.show_quick_view -%}
+                    <button
+                      type="button"
+                      class="combined-listing__action-button combined-listing__action-button--quick-view"
+                      data-quick-view
+                      data-product-id="{{ product.id }}"
+                      aria-label="{{ 'products.product.quick_view' | t }}"
+                    >
+                      {{ 'icon-eye.svg' | inline_asset_content }}
+                    </button>
+                  {%- endif -%}
+
+                  {%- if section.settings.show_wishlist -%}
+                    <button
+                      type="button"
+                      class="combined-listing__action-button combined-listing__action-button--wishlist"
+                      data-wishlist-toggle
+                      data-product-id="{{ product.id }}"
+                      aria-label="{{ 'products.product.add_to_wishlist' | t }}"
+                    >
+                      {{ 'icon-heart.svg' | inline_asset_content }}
+                    </button>
+                  {%- endif -%}
+
+                  {%- if section.settings.show_compare -%}
+                    <button
+                      type="button"
+                      class="combined-listing__action-button combined-listing__action-button--compare"
+                      data-compare-toggle
+                      data-product-id="{{ product.id }}"
+                      aria-label="{{ 'products.product.add_to_compare' | t }}"
+                    >
+                      {{ 'icon-compare.svg' | inline_asset_content }}
+                    </button>
+                  {%- endif -%}
+                </div>
+
+                <!-- Product Badges -->
+                {%- if product.compare_at_price > product.price -%}
+                  <div class="combined-listing__product-badge combined-listing__product-badge--sale">
+                    {{ 'products.product.sale' | t }}
+                  </div>
+                {%- endif -%}
+
+                {%- unless product.available -%}
+                  <div class="combined-listing__product-badge combined-listing__product-badge--sold-out">
+                    {{ 'products.product.sold_out' | t }}
+                  </div>
+                {%- endunless -%}
+              </div>
+
+              <!-- Product Info -->
+              <div class="combined-listing__product-info">
+                <!-- Vendor -->
+                {%- if section.settings.show_vendor and product.vendor != blank -%}
+                  <div class="combined-listing__product-vendor">
+                    {{ product.vendor | escape }}
+                  </div>
+                {%- endif -%}
+
+                <!-- Title -->
+                <h3 class="combined-listing__product-title">
+                  <a href="{{ product.url }}" class="combined-listing__product-title-link">
+                    {{ product.title | escape }}
+                  </a>
+                </h3>
+
+                <!-- Rating -->
+                {%- if section.settings.show_rating and product.metafields.reviews.rating.value != blank -%}
+                  <div class="combined-listing__product-rating">
+                    <div class="combined-listing__rating-stars">
+                      {%- assign rating = product.metafields.reviews.rating.value -%}
+                      {%- for i in (1..5) -%}
+                        <span class="combined-listing__rating-star">
+                          {%- if i <= rating -%}
+                            {{ 'icon-star.svg' | inline_asset_content }}
+                          {%- else -%}
+                            {{ 'icon-star-empty.svg' | inline_asset_content }}
+                          {%- endif -%}
+                        </span>
+                      {%- endfor -%}
+                    </div>
+                    <span class="combined-listing__rating-count">
+                      ({{ product.metafields.reviews.rating_count.value | default: 0 }})
+                    </span>
+                  </div>
+                {%- endif -%}
+
+                <!-- Price -->
+                <div class="combined-listing__product-price">
+                  {%- render 'price', product: product, use_variant: true, show_badges: false -%}
+                </div>
+
+                <!-- Quick Add -->
+                {%- if section.settings.show_quick_add and product.available -%}
+                  <div class="combined-listing__product-quick-add">
+                    <button
+                      type="button"
+                      class="combined-listing__quick-add-button"
+                      data-quick-add
+                      data-product-id="{{ product.id }}"
+                      {% unless product.has_only_default_variant %}
+                        data-product-has-variants="true"
+                      {% endunless %}
+                    >
+                      {{ 'products.product.add_to_cart' | t }}
+                    </button>
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <!-- No Results -->
+      <div class="combined-listing__no-results" data-no-results style="display: none;">
+        <div class="combined-listing__no-results-content">
+          <div class="combined-listing__no-results-icon">
+            {{ 'icon-search.svg' | inline_asset_content }}
+          </div>
+          <h3 class="combined-listing__no-results-title">{{ 'sections.combined_listing.no_results_title' | t }}</h3>
+          <p class="combined-listing__no-results-text">{{ 'sections.combined_listing.no_results_text' | t }}</p>
+          <button
+            type="button"
+            class="combined-listing__no-results-clear"
+            data-filter-clear
+          >
+            {{ 'sections.combined_listing.clear_filters' | t }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="combined-listing__loading" data-loading style="display: none;">
+        <div class="combined-listing__loading-spinner">
+          {{ 'loading-spinner.svg' | inline_asset_content }}
+        </div>
+        <p class="combined-listing__loading-text">{{ 'sections.combined_listing.loading' | t }}</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    {%- if section.settings.enable_pagination and section.blocks.size > section.settings.products_per_page -%}
+      <div class="combined-listing__pagination" data-pagination>
+        <button
+          type="button"
+          class="combined-listing__pagination-button combined-listing__pagination-button--prev"
+          data-pagination-prev
+          disabled
+        >
+          {{ 'icon-arrow.svg' | inline_asset_content }}
+          <span>{{ 'sections.combined_listing.previous' | t }}</span>
+        </button>
+
+        <div class="combined-listing__pagination-pages" data-pagination-pages>
+          <!-- Pages will be generated by JavaScript -->
+        </div>
+
+        <button
+          type="button"
+          class="combined-listing__pagination-button combined-listing__pagination-button--next"
+          data-pagination-next
+        >
+          <span>{{ 'sections.combined_listing.next' | t }}</span>
+          {{ 'icon-arrow.svg' | inline_asset_content }}
+        </button>
+      </div>
+    {%- endif -%}
+  </combined-listing>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.combined_listing.name",
+  "class": "section-combined-listing",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.combined_listing.settings.header__content.content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.combined_listing.settings.title.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.combined_listing.settings.description.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.combined_listing.settings.header__layout.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:sections.combined_listing.settings.layout.options__1.label"
+        },
+        {
+          "value": "list",
+          "label": "t:sections.combined_listing.settings.layout.options__2.label"
+        }
+      ],
+      "default": "grid",
+      "label": "t:sections.combined_listing.settings.layout.label"
+    },
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:sections.combined_listing.settings.products_per_row.label",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "products_per_row_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "t:sections.combined_listing.settings.products_per_row_mobile.label",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.combined_listing.settings.grid_gap.label",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "t:sections.combined_listing.settings.header__display.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.show_rating.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.show_quick_add.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_view",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.show_quick_view.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.show_wishlist.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.show_compare.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.combined_listing.settings.header__functionality.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_layout_toggle",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.enable_layout_toggle.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filters",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.enable_filters.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "t:sections.combined_listing.settings.enable_sorting.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pagination",
+      "default": false,
+      "label": "t:sections.combined_listing.settings.enable_pagination.label"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "label": "t:sections.combined_listing.settings.products_per_page.label",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "t:sections.combined_listing.settings.header__styling.content"
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.combined_listing.settings.card_padding.label",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.combined_listing.settings.border_radius.label",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "shadow_intensity",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.combined_listing.settings.shadow_intensity.label",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "hover_scale",
+      "min": 1.0,
+      "max": 1.1,
+      "step": 0.01,
+      "label": "t:sections.combined_listing.settings.hover_scale.label",
+      "default": 1.02
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_colors",
+      "default": false,
+      "label": "t:sections.combined_listing.settings.custom_colors.label"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "t:sections.combined_listing.settings.card_background.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "t:sections.combined_listing.settings.card_border_color.label",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.combined_listing.settings.text_color.label",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "t:sections.combined_listing.settings.price_color.label",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "t:sections.combined_listing.settings.button_background.label",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "t:sections.combined_listing.settings.button_text_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.combined_listing.settings.margin_top.label",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.combined_listing.settings.margin_bottom.label",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "t:sections.combined_listing.blocks.product.name",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.combined_listing.blocks.product.settings.product.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.combined_listing.presets.name",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %} 

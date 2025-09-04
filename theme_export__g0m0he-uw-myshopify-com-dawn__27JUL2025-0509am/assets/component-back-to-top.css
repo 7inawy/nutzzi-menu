@@ -1,0 +1,181 @@
+/* Back to Top Button Component */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(var(--color-foreground), 0.2);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.back-to-top__button:hover {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(var(--color-foreground), 0.3);
+}
+
+.back-to-top__button:focus {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 2px;
+}
+
+.back-to-top__button:active {
+  transform: translateY(0);
+}
+
+.back-to-top__icon {
+  width: 20px;
+  height: 20px;
+  transform: rotate(-90deg);
+  transition: transform 0.2s ease;
+}
+
+.back-to-top__button:hover .back-to-top__icon {
+  transform: rotate(-90deg) scale(1.1);
+}
+
+.back-to-top__text {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+  pointer-events: none;
+}
+
+.back-to-top__text::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-bottom-color: rgb(var(--color-foreground));
+}
+
+.back-to-top__button:hover .back-to-top__text {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Loading State */
+.back-to-top__button.is-loading {
+  pointer-events: none;
+}
+
+.back-to-top__button.is-loading .back-to-top__icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(270deg);
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 749px) {
+  .back-to-top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+  
+  .back-to-top__button {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .back-to-top__icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .back-to-top {
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  .back-to-top__button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .back-to-top__icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .back-to-top__text {
+    display: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .back-to-top__button {
+    border: 2px solid rgb(var(--color-foreground));
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .back-to-top__button {
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  .back-to-top__button:hover {
+    transform: none;
+  }
+  
+  .back-to-top__icon {
+    transition: none;
+  }
+  
+  .back-to-top__button:hover .back-to-top__icon {
+    transform: rotate(-90deg);
+  }
+} 

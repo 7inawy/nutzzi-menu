@@ -1,0 +1,361 @@
+{{ 'component-advanced-recommendations.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'advanced-recommendations.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-advanced-recommendations {
+    --recommendations-grid-columns: {{ section.settings.columns_desktop }};
+    --recommendations-grid-columns-mobile: {{ section.settings.columns_mobile }};
+    --recommendations-spacing: {{ section.settings.spacing }}px;
+    --recommendations-animation-duration: {{ section.settings.animation_duration }}ms;
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-advanced-recommendations {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-advanced-recommendations">
+  <advanced-recommendations
+    class="advanced-recommendations"
+    data-section="{{ section.id }}"
+    data-algorithm="{{ section.settings.algorithm }}"
+    data-limit="{{ section.settings.limit }}"
+    data-layout="{{ section.settings.layout }}"
+    data-columns-desktop="{{ section.settings.columns_desktop }}"
+    data-columns-mobile="{{ section.settings.columns_mobile }}"
+    data-show-prices="{{ section.settings.show_prices }}"
+    data-show-variants="{{ section.settings.show_variants }}"
+    data-show-ratings="{{ section.settings.show_ratings }}"
+    data-show-badges="{{ section.settings.show_badges }}"
+    data-show-quick-add="{{ section.settings.show_quick_add }}"
+    data-show-wishlist="{{ section.settings.show_wishlist }}"
+    data-auto-refresh="{{ section.settings.auto_refresh }}"
+    data-refresh-interval="{{ section.settings.refresh_interval }}"
+    data-animation-duration="{{ section.settings.animation_duration }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    <!-- Recommendations Header -->
+    <div class="advanced-recommendations__header">
+      <div class="page-width">
+        <div class="advanced-recommendations__header-content">
+          <div class="advanced-recommendations__title-section">
+            <h2 class="advanced-recommendations__title">
+              {{ 'sections.advanced_recommendations.title' | t }}
+            </h2>
+            {% if section.settings.subtitle != blank %}
+              <p class="advanced-recommendations__subtitle">
+                {{ section.settings.subtitle | escape }}
+              </p>
+            {% endif %}
+          </div>
+          
+          <div class="advanced-recommendations__controls">
+            <div class="advanced-recommendations__algorithm-selector">
+              <label for="algorithm-{{ section.id }}" class="advanced-recommendations__algorithm-label">
+                {{ 'sections.advanced_recommendations.algorithm_label' | t }}
+              </label>
+              <select id="algorithm-{{ section.id }}" class="advanced-recommendations__algorithm-select" data-algorithm-select>
+                <option value="collaborative">{{ 'sections.advanced_recommendations.algorithm_collaborative' | t }}</option>
+                <option value="content">{{ 'sections.advanced_recommendations.algorithm_content' | t }}</option>
+                <option value="hybrid">{{ 'sections.advanced_recommendations.algorithm_hybrid' | t }}</option>
+                <option value="trending">{{ 'sections.advanced_recommendations.algorithm_trending' | t }}</option>
+              </select>
+            </div>
+            
+            <button
+              type="button"
+              class="advanced-recommendations__refresh-button"
+              data-refresh-recommendations
+              aria-label="{{ 'sections.advanced_recommendations.refresh' | t }}"
+            >
+              <span class="advanced-recommendations__refresh-icon">
+                {%- render 'icon-refresh' -%}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations Content -->
+    <div class="advanced-recommendations__content">
+      <div class="page-width">
+        <!-- Recommendations Grid -->
+        <div class="advanced-recommendations__grid" data-recommendations-grid>
+          <!-- Products will be populated by JavaScript -->
+        </div>
+        
+        <!-- Loading State -->
+        <div class="advanced-recommendations__loading" data-loading-state>
+          <div class="advanced-recommendations__loading-content">
+            <div class="advanced-recommendations__loading-spinner"></div>
+            <p class="advanced-recommendations__loading-text">
+              {{ 'sections.advanced_recommendations.loading' | t }}
+            </p>
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="advanced-recommendations__empty" data-empty-state>
+          <div class="advanced-recommendations__empty-content">
+            <div class="advanced-recommendations__empty-icon">
+              {%- render 'icon-recommendations' -%}
+            </div>
+            <h3 class="advanced-recommendations__empty-title">
+              {{ 'sections.advanced_recommendations.empty_title' | t }}
+            </h3>
+            <p class="advanced-recommendations__empty-text">
+              {{ 'sections.advanced_recommendations.empty_text' | t }}
+            </p>
+            <div class="advanced-recommendations__empty-actions">
+              <a href="{{ routes.collections_url }}" class="button button--primary">
+                {{ 'sections.advanced_recommendations.browse_products' | t }}
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Error State -->
+        <div class="advanced-recommendations__error" data-error-state>
+          <div class="advanced-recommendations__error-content">
+            <div class="advanced-recommendations__error-icon">
+              {%- render 'icon-error' -%}
+            </div>
+            <h3 class="advanced-recommendations__error-title">
+              {{ 'sections.advanced_recommendations.error_title' | t }}
+            </h3>
+            <p class="advanced-recommendations__error-text">
+              {{ 'sections.advanced_recommendations.error_text' | t }}
+            </p>
+            <div class="advanced-recommendations__error-actions">
+              <button
+                type="button"
+                class="button button--primary"
+                data-retry-recommendations
+              >
+                {{ 'sections.advanced_recommendations.retry' | t }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations Analytics -->
+    <div class="advanced-recommendations__analytics" data-analytics>
+      <div class="page-width">
+        <div class="advanced-recommendations__analytics-content">
+          <div class="advanced-recommendations__analytics-item">
+            <span class="advanced-recommendations__analytics-label">
+              {{ 'sections.advanced_recommendations.accuracy' | t }}
+            </span>
+            <span class="advanced-recommendations__analytics-value" data-accuracy-value>
+              {{ 'sections.advanced_recommendations.accuracy_default' | t }}
+            </span>
+          </div>
+          
+          <div class="advanced-recommendations__analytics-item">
+            <span class="advanced-recommendations__analytics-label">
+              {{ 'sections.advanced_recommendations.relevance' | t }}
+            </span>
+            <span class="advanced-recommendations__analytics-value" data-relevance-value>
+              {{ 'sections.advanced_recommendations.relevance_default' | t }}
+            </span>
+          </div>
+          
+          <div class="advanced-recommendations__analytics-item">
+            <span class="advanced-recommendations__analytics-label">
+              {{ 'sections.advanced_recommendations.last_updated' | t }}
+            </span>
+            <span class="advanced-recommendations__analytics-value" data-last-updated>
+              {{ 'sections.advanced_recommendations.last_updated_default' | t }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </advanced-recommendations>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.advanced_recommendations.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.advanced_recommendations.settings.content_header.content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "t:sections.advanced_recommendations.settings.subtitle.label",
+      "default": "t:sections.advanced_recommendations.settings.subtitle.default"
+    },
+    {
+      "type": "select",
+      "id": "algorithm",
+      "options": [
+        {
+          "value": "collaborative",
+          "label": "t:sections.advanced_recommendations.settings.algorithm.options__1.label"
+        },
+        {
+          "value": "content",
+          "label": "t:sections.advanced_recommendations.settings.algorithm.options__2.label"
+        },
+        {
+          "value": "hybrid",
+          "label": "t:sections.advanced_recommendations.settings.algorithm.options__3.label"
+        },
+        {
+          "value": "trending",
+          "label": "t:sections.advanced_recommendations.settings.algorithm.options__4.label"
+        }
+      ],
+      "default": "hybrid",
+      "label": "t:sections.advanced_recommendations.settings.algorithm.label"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 8,
+      "label": "t:sections.advanced_recommendations.settings.limit.label"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:sections.advanced_recommendations.settings.layout.options__1.label"
+        },
+        {
+          "value": "slider",
+          "label": "t:sections.advanced_recommendations.settings.layout.options__2.label"
+        }
+      ],
+      "default": "grid",
+      "label": "t:sections.advanced_recommendations.settings.layout.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.advanced_recommendations.settings.columns_desktop.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2,
+      "label": "t:sections.advanced_recommendations.settings.columns_mobile.label"
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 20,
+      "max": 60,
+      "step": 10,
+      "default": 30,
+      "unit": "px",
+      "label": "t:sections.advanced_recommendations.settings.spacing.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.advanced_recommendations.settings.features_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prices",
+      "default": true,
+      "label": "t:sections.advanced_recommendations.settings.show_prices.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variants",
+      "default": true,
+      "label": "t:sections.advanced_recommendations.settings.show_variants.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ratings",
+      "default": true,
+      "label": "t:sections.advanced_recommendations.settings.show_ratings.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges",
+      "default": true,
+      "label": "t:sections.advanced_recommendations.settings.show_badges.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "default": true,
+      "label": "t:sections.advanced_recommendations.settings.show_quick_add.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "default": true,
+      "label": "t:sections.advanced_recommendations.settings.show_wishlist.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.advanced_recommendations.settings.behavior_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_refresh",
+      "default": false,
+      "label": "t:sections.advanced_recommendations.settings.auto_refresh.label"
+    },
+    {
+      "type": "range",
+      "id": "refresh_interval",
+      "min": 30,
+      "max": 300,
+      "step": 30,
+      "default": 60,
+      "unit": "s",
+      "label": "t:sections.advanced_recommendations.settings.refresh_interval.label"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "default": 250,
+      "unit": "ms",
+      "label": "t:sections.advanced_recommendations.settings.animation_duration.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.advanced_recommendations.settings.hide_on_mobile.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.advanced_recommendations.presets.name"
+    }
+  ]
+}
+{% endschema %} 

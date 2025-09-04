@@ -1,0 +1,267 @@
+{{ 'component-product-comparison.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'product-comparison.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-product-comparison {
+    --comparison-max-products: {{ section.settings.max_products }};
+    --comparison-table-width: {{ section.settings.table_width }}px;
+    --comparison-animation-duration: {{ section.settings.animation_duration }}ms;
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-product-comparison {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-product-comparison">
+  <product-comparison
+    class="product-comparison"
+    data-section="{{ section.id }}"
+    data-max-products="{{ section.settings.max_products }}"
+    data-show-images="{{ section.settings.show_images }}"
+    data-show-prices="{{ section.settings.show_prices }}"
+    data-show-variants="{{ section.settings.show_variants }}"
+    data-show-descriptions="{{ section.settings.show_descriptions }}"
+    data-show-availability="{{ section.settings.show_availability }}"
+    data-show-ratings="{{ section.settings.show_ratings }}"
+    data-show-specifications="{{ section.settings.show_specifications }}"
+    data-persist-comparison="{{ section.settings.persist_comparison }}"
+    data-animation-duration="{{ section.settings.animation_duration }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    <!-- Comparison Header -->
+    <div class="product-comparison__header">
+      <div class="page-width">
+        <div class="product-comparison__header-content">
+          <div class="product-comparison__title-section">
+            <h2 class="product-comparison__title">
+              {{ 'sections.product_comparison.title' | t }}
+            </h2>
+            {% if section.settings.subtitle != blank %}
+              <p class="product-comparison__subtitle">
+                {{ section.settings.subtitle | escape }}
+              </p>
+            {% endif %}
+          </div>
+          
+          <div class="product-comparison__controls">
+            <div class="product-comparison__product-count" data-product-count>
+              <span class="product-comparison__count-text">
+                {{ 'sections.product_comparison.products_selected' | t: count: 0 }}
+              </span>
+              <span class="product-comparison__max-text">
+                {{ 'sections.product_comparison.of_max' | t: max: section.settings.max_products }}
+              </span>
+            </div>
+            
+            <button
+              type="button"
+              class="product-comparison__clear-button"
+              data-clear-comparison
+              style="display: none;"
+            >
+              {{ 'sections.product_comparison.clear_all' | t }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="product-comparison__table-container">
+      <div class="page-width">
+        <div class="product-comparison__table-wrapper" data-table-wrapper>
+          <table class="product-comparison__table" data-comparison-table>
+            <thead class="product-comparison__table-header">
+              <tr class="product-comparison__header-row">
+                <th class="product-comparison__header-cell product-comparison__feature-cell">
+                  {{ 'sections.product_comparison.features' | t }}
+                </th>
+                <!-- Product columns will be populated by JavaScript -->
+              </tr>
+            </thead>
+            <tbody class="product-comparison__table-body">
+              <!-- Table rows will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="product-comparison__empty" data-empty-state>
+          <div class="product-comparison__empty-content">
+            <div class="product-comparison__empty-icon">
+              {%- render 'icon-compare' -%}
+            </div>
+            <h3 class="product-comparison__empty-title">
+              {{ 'sections.product_comparison.empty_title' | t }}
+            </h3>
+            <p class="product-comparison__empty-text">
+              {{ 'sections.product_comparison.empty_text' | t }}
+            </p>
+            <div class="product-comparison__empty-actions">
+              <a href="{{ routes.collections_url }}" class="button button--primary">
+                {{ 'sections.product_comparison.browse_products' | t }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Sidebar (Mobile) -->
+    <div class="product-comparison__sidebar" data-comparison-sidebar>
+      <div class="product-comparison__sidebar-header">
+        <h3 class="product-comparison__sidebar-title">
+          {{ 'sections.product_comparison.comparison' | t }}
+        </h3>
+        <button
+          type="button"
+          class="product-comparison__sidebar-close"
+          data-sidebar-close
+          aria-label="{{ 'accessibility.close' | t }}"
+        >
+          {%- render 'icon-close' -%}
+        </button>
+      </div>
+      
+      <div class="product-comparison__sidebar-content" data-sidebar-content>
+        <!-- Sidebar content will be populated by JavaScript -->
+      </div>
+      
+      <div class="product-comparison__sidebar-actions">
+        <button
+          type="button"
+          class="button button--primary product-comparison__compare-button"
+          data-compare-button
+          disabled
+        >
+          {{ 'sections.product_comparison.compare_products' | t }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Comparison Overlay -->
+    <div class="product-comparison__overlay" data-comparison-overlay></div>
+  </product-comparison>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.product_comparison.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.product_comparison.settings.content_header.content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "t:sections.product_comparison.settings.subtitle.label",
+      "default": "t:sections.product_comparison.settings.subtitle.default"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.product_comparison.settings.max_products.label"
+    },
+    {
+      "type": "range",
+      "id": "table_width",
+      "min": 800,
+      "max": 1400,
+      "step": 100,
+      "default": 1200,
+      "unit": "px",
+      "label": "t:sections.product_comparison.settings.table_width.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.product_comparison.settings.features_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_images",
+      "default": true,
+      "label": "t:sections.product_comparison.settings.show_images.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prices",
+      "default": true,
+      "label": "t:sections.product_comparison.settings.show_prices.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variants",
+      "default": true,
+      "label": "t:sections.product_comparison.settings.show_variants.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_descriptions",
+      "default": true,
+      "label": "t:sections.product_comparison.settings.show_descriptions.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_availability",
+      "default": true,
+      "label": "t:sections.product_comparison.settings.show_availability.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ratings",
+      "default": true,
+      "label": "t:sections.product_comparison.settings.show_ratings.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_specifications",
+      "default": true,
+      "label": "t:sections.product_comparison.settings.show_specifications.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.product_comparison.settings.behavior_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "persist_comparison",
+      "default": true,
+      "label": "t:sections.product_comparison.settings.persist_comparison.label"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "default": 250,
+      "unit": "ms",
+      "label": "t:sections.product_comparison.settings.animation_duration.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.product_comparison.settings.hide_on_mobile.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_comparison.presets.name"
+    }
+  ]
+}
+{% endschema %} 

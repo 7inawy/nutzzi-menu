@@ -1,0 +1,233 @@
+{% comment %}
+  Performance Optimizer Section
+  Implements advanced performance optimizations based on awesome-shopify best practices
+{% endcomment %}
+
+<div class="performance-optimizer" data-performance-optimizer>
+  <!-- Critical CSS Inliner -->
+  <style data-critical-css>
+    /* Critical above-the-fold styles */
+    .performance-optimizer__critical {
+      display: none;
+    }
+    
+    /* Lazy loading styles */
+    .lazy-load {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .lazy-load.loaded {
+      opacity: 1;
+    }
+    
+    /* Image optimization */
+    .optimized-image {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+    
+    /* Preload critical resources */
+    .preload-critical {
+      display: none;
+    }
+  </style>
+
+  <!-- Resource Preloader -->
+  <div class="performance-optimizer__preloader" data-preloader>
+    <link rel="preload" href="{{ 'base.css' | asset_url }}" as="style">
+    <link rel="preload" href="{{ 'global.js' | asset_url }}" as="script">
+    <link rel="dns-prefetch" href="//cdn.shopify.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  </div>
+
+  <!-- Lazy Loading Container -->
+  <div class="performance-optimizer__lazy-container" data-lazy-container>
+    {% if section.settings.enable_lazy_loading %}
+      <div class="lazy-load-wrapper">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'lazy_image' %}
+              <div class="lazy-image-block" {{ block.shopify_attributes }}>
+                <img 
+                  class="lazy-load optimized-image"
+                  data-src="{{ block.settings.image | image_url: width: 800 }}"
+                  data-srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1200 }} 1200w"
+                  alt="{{ block.settings.image.alt | escape }}"
+                  loading="lazy"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                >
+              </div>
+            {% when 'lazy_video' %}
+              <div class="lazy-video-block" {{ block.shopify_attributes }}>
+                <video 
+                  class="lazy-load"
+                  data-src="{{ block.settings.video_url }}"
+                  preload="none"
+                  muted
+                  loop
+                  playsinline
+                >
+                  <source data-src="{{ block.settings.video_url }}" type="video/mp4">
+                </video>
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Performance Monitoring -->
+  <div class="performance-optimizer__metrics" data-metrics hidden>
+    <div class="metric" data-metric="fcp">First Contentful Paint: <span></span></div>
+    <div class="metric" data-metric="lcp">Largest Contentful Paint: <span></span></div>
+    <div class="metric" data-metric="fid">First Input Delay: <span></span></div>
+    <div class="metric" data-metric="cls">Cumulative Layout Shift: <span></span></div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Performance Optimizer",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Performance Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_lazy_loading",
+      "label": "Enable Lazy Loading",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_critical_css",
+      "label": "Enable Critical CSS",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_resource_hints",
+      "label": "Enable Resource Hints",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_performance_monitoring",
+      "label": "Enable Performance Monitoring",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "lazy_load_threshold",
+      "label": "Lazy Load Threshold",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "default": 200,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Image Optimization"
+    },
+    {
+      "type": "select",
+      "id": "image_format",
+      "label": "Preferred Image Format",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto (WebP if supported)"
+        },
+        {
+          "value": "webp",
+          "label": "WebP"
+        },
+        {
+          "value": "jpg",
+          "label": "JPEG"
+        },
+        {
+          "value": "png",
+          "label": "PNG"
+        }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_progressive_loading",
+      "label": "Enable Progressive Loading",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "lazy_image",
+      "name": "Lazy Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "image_loading",
+          "label": "Loading Strategy",
+          "options": [
+            {
+              "value": "lazy",
+              "label": "Lazy"
+            },
+            {
+              "value": "eager",
+              "label": "Eager"
+            }
+          ],
+          "default": "lazy"
+        }
+      ]
+    },
+    {
+      "type": "lazy_video",
+      "name": "Lazy Video",
+      "settings": [
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL"
+        },
+        {
+          "type": "checkbox",
+          "id": "autoplay",
+          "label": "Autoplay",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "muted",
+          "label": "Muted",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Performance Optimizer"
+    }
+  ]
+}
+{% endschema %} 

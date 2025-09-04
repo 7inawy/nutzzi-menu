@@ -1,0 +1,188 @@
+{{ 'component-sticky-cart.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'sticky-cart.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-sticky-cart {
+    --sticky-cart-position: {{ section.settings.position }};
+    --sticky-cart-size: {{ section.settings.button_size }}px;
+    --sticky-cart-radius: {{ section.settings.corner_radius }}px;
+    --sticky-cart-z-index: 1000;
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-sticky-cart {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-sticky-cart">
+  <sticky-cart
+    class="sticky-cart"
+    data-position="{{ section.settings.position }}"
+    data-show-count="{{ section.settings.show_count }}"
+    data-show-total="{{ section.settings.show_total }}"
+    data-quick-actions="{{ section.settings.quick_actions }}"
+    data-auto-hide="{{ section.settings.auto_hide }}"
+    data-hide-delay="{{ section.settings.hide_delay }}"
+    data-button-size="{{ section.settings.button_size }}"
+    data-corner-radius="{{ section.settings.corner_radius }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    <button
+      type="button"
+      class="sticky-cart__button"
+      aria-label="{{ 'sections.sticky_cart.view_cart' | t }}"
+      data-action="open-cart"
+    >
+      <span class="sticky-cart__icon">
+        {%- render 'icon-cart' -%}
+      </span>
+      
+      {% if section.settings.show_count %}
+        <span class="sticky-cart__count" data-cart-count>
+          {{ cart.item_count }}
+        </span>
+      {% endif %}
+      
+      {% if section.settings.show_total %}
+        <span class="sticky-cart__total" data-cart-total>
+          {{ cart.total_price | money }}
+        </span>
+      {% endif %}
+    </button>
+
+    {% if section.settings.quick_actions %}
+      <div class="sticky-cart__quick-actions">
+        <button
+          type="button"
+          class="sticky-cart__quick-checkout"
+          data-action="quick-checkout"
+          aria-label="{{ 'sections.sticky_cart.quick_checkout' | t }}"
+        >
+          <span class="sticky-cart__quick-checkout-text">
+            {{ 'sections.sticky_cart.quick_checkout' | t }}
+          </span>
+        </button>
+      </div>
+    {% endif %}
+  </sticky-cart>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.sticky_cart.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.sticky_cart.settings.position_header.content"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "options": [
+        {
+          "value": "bottom-right",
+          "label": "t:sections.sticky_cart.settings.position.options__1.label"
+        },
+        {
+          "value": "bottom-left",
+          "label": "t:sections.sticky_cart.settings.position.options__2.label"
+        },
+        {
+          "value": "top-right",
+          "label": "t:sections.sticky_cart.settings.position.options__3.label"
+        },
+        {
+          "value": "top-left",
+          "label": "t:sections.sticky_cart.settings.position.options__4.label"
+        }
+      ],
+      "default": "bottom-right",
+      "label": "t:sections.sticky_cart.settings.position.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.sticky_cart.settings.display_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "default": true,
+      "label": "t:sections.sticky_cart.settings.show_count.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_total",
+      "default": true,
+      "label": "t:sections.sticky_cart.settings.show_total.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "quick_actions",
+      "default": false,
+      "label": "t:sections.sticky_cart.settings.quick_actions.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.sticky_cart.settings.behavior_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_hide",
+      "default": true,
+      "label": "t:sections.sticky_cart.settings.auto_hide.label"
+    },
+    {
+      "type": "range",
+      "id": "hide_delay",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "t:sections.sticky_cart.settings.hide_delay.label",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.sticky_cart.settings.hide_on_mobile.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.sticky_cart.settings.styling_header.content"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 40,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.sticky_cart.settings.button_size.label",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.sticky_cart.settings.corner_radius.label",
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.sticky_cart.presets.name"
+    }
+  ]
+}
+{% endschema %} 

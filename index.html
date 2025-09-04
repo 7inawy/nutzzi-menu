@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutzzi - Premium Nuts & Seeds Menu</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="menue/our logo.png" alt="Nutzzi Logo" class="logo-img">
+                <h1>Nutzzi</h1>
+            </div>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="#cashews">Cashews</a></li>
+                    <li><a href="#almonds">Almonds</a></li>
+                    <li><a href="#other-nuts">Other Nuts</a></li>
+                    <li><a href="#seeds">Seeds</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <div class="hero-banner">
+                <img src="menue/banner.jpg" alt="Premium Nuts Banner" class="banner-img">
+                <div class="hero-content">
+                    <h2>Premium Nuts & Seeds</h2>
+                    <p>Fresh, Quality, Delicious</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="menu-section">
+            <div class="container">
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search for products...">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-category="all">All</button>
+                        <button class="filter-btn" data-category="cashews">Cashews</button>
+                        <button class="filter-btn" data-category="almonds">Almonds</button>
+                        <button class="filter-btn" data-category="other-nuts">Other Nuts</button>
+                        <button class="filter-btn" data-category="seeds">Seeds</button>
+                    </div>
+                </div>
+
+                <!-- Cashews Category -->
+                <div class="category" id="cashews" data-category="cashews">
+                    <div class="category-header" onclick="toggleCategory('cashews')">
+                        <h3><i class="fas fa-seedling"></i> Cashews</h3>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="category-content active">
+                        <div class="products-grid">
+                            <div class="product-card" data-name="butter-roasted salted cashews">
+                                <div class="product-image">
+                                    <img src="menue/كاجو مدخن.webp" alt="Butter-Roasted Salted Cashews">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Butter-Roasted Salted</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">195 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="salted cashews">
+                                <div class="product-image">
+                                    <img src="menue/كاجو مدخن.webp" alt="Salted Cashews">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Salted</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">195 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="hickory smoked cashews">
+                                <div class="product-image">
+                                    <img src="menue/كاجو مدخن.webp" alt="Hickory Smoked Cashews">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Hickory Smoked</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">195 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Almonds Category -->
+                <div class="category" id="almonds" data-category="almonds">
+                    <div class="category-header" onclick="toggleCategory('almonds')">
+                        <h3><i class="fas fa-leaf"></i> Almonds</h3>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="category-content active">
+                        <div class="products-grid">
+                            <div class="product-card" data-name="hickory smoked almonds">
+                                <div class="product-image">
+                                    <img src="menue/hickory almonds.webp" alt="Hickory Smoked Almonds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Hickory Smoked</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">185 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="unsalted almonds">
+                                <div class="product-image">
+                                    <img src="menue/salted almonds.webp" alt="Unsalted Almonds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Unsalted</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">185 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="chilli lime almonds">
+                                <div class="product-image">
+                                    <img src="menue/chilli lemon almonds.webp" alt="Crunchy Coated Chilli Lime Almonds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Crunchy Coated (Chilli Lime)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">180 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="cheese almonds">
+                                <div class="product-image">
+                                    <img src="menue/cheese almodnd and tomato one also .webp" alt="Cheese Almonds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Cheese</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">180 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="tomatoes herbs almonds">
+                                <div class="product-image">
+                                    <img src="menue/cheese almodnd and tomato one also .webp" alt="Crunchy Coated Tomatoes & Herbs Almonds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Crunchy Coated (Tomatoes & Herbs)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">185 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Nuts Category -->
+                <div class="category" id="other-nuts" data-category="other-nuts">
+                    <div class="category-header" onclick="toggleCategory('other-nuts')">
+                        <h3><i class="fas fa-tree"></i> Other Nuts</h3>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="category-content active">
+                        <div class="products-grid">
+                            <div class="product-card" data-name="salted pistachio">
+                                <div class="product-image">
+                                    <img src="menue/pistachio.webp" alt="Salted Pistachio">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Pistachio (Salted)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">210 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="butter-roasted hazelnuts">
+                                <div class="product-image">
+                                    <img src="menue/hazelnut.webp" alt="Butter-Roasted Hazelnuts">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Hazelnuts (Butter-Roasted)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">195 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="raw walnuts">
+                                <div class="product-image">
+                                    <img src="menue/hazelnut.webp" alt="Raw Walnuts">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Walnuts (Raw)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">165 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="peeled salted peanuts">
+                                <div class="product-image">
+                                    <img src="menue/peanut.webp" alt="Peeled Salted Peanuts">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Peanuts (Peeled Salted)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">98 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="peeled unsalted peanuts">
+                                <div class="product-image">
+                                    <img src="menue/peanut.webp" alt="Peeled Unsalted Peanuts">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Peanuts (Peeled Unsalted)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">98 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seeds Category -->
+                <div class="category" id="seeds" data-category="seeds">
+                    <div class="category-header" onclick="toggleCategory('seeds')">
+                        <h3><i class="fas fa-spa"></i> Seeds</h3>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="category-content active">
+                        <div class="products-grid">
+                            <div class="product-card" data-name="gourd seeds">
+                                <div class="product-image">
+                                    <img src="menue/لب ابيض.webp" alt="Roasted Salted Gourd Seeds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Gourd Seeds (Roasted Salted)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">125 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="egyptian seeds">
+                                <div class="product-image">
+                                    <img src="menue/لب مصري.webp" alt="Roasted Salted Egyptian Seeds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Egyptian Seeds (Roasted Salted)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">125 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="pumpkin seeds">
+                                <div class="product-image">
+                                    <img src="menue/لب خشابي.jpg" alt="Roasted Salted Pumpkin Seeds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Pumpkin Seeds (Roasted Salted)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">125 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                            <div class="product-card" data-name="sunflower seeds">
+                                <div class="product-image">
+                                    <img src="menue/sunflowerseeds.webp" alt="Roasted Salted Sunflower Seeds">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Sunflower Seeds (Roasted Salted)</h4>
+                                    <p class="weight">100 GM</p>
+                                    <p class="price">115 <span class="currency">EGP</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Nutzzi. All rights reserved.</p>
+            <p>Premium Quality Nuts & Seeds</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 

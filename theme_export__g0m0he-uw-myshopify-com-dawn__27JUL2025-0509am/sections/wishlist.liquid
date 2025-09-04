@@ -1,0 +1,347 @@
+{{ 'component-wishlist.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-wishlist {
+    --wishlist-grid-columns: {{ section.settings.columns_desktop }};
+    --wishlist-grid-columns-mobile: {{ section.settings.columns_mobile }};
+    --wishlist-spacing: {{ section.settings.spacing }}px;
+    --wishlist-animation-duration: {{ section.settings.animation_duration }}ms;
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-wishlist {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-wishlist">
+  <wishlist
+    class="wishlist"
+    data-section="{{ section.id }}"
+    data-layout="{{ section.settings.layout }}"
+    data-columns-desktop="{{ section.settings.columns_desktop }}"
+    data-columns-mobile="{{ section.settings.columns_mobile }}"
+    data-show-prices="{{ section.settings.show_prices }}"
+    data-show-variants="{{ section.settings.show_variants }}"
+    data-show-availability="{{ section.settings.show_availability }}"
+    data-show-remove="{{ section.settings.show_remove }}"
+    data-show-share="{{ section.settings.show_share }}"
+    data-persist-wishlist="{{ section.settings.persist_wishlist }}"
+    data-animation-duration="{{ section.settings.animation_duration }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    <!-- Wishlist Header -->
+    <div class="wishlist__header">
+      <div class="page-width">
+        <div class="wishlist__header-content">
+          <div class="wishlist__title-section">
+            <h2 class="wishlist__title">
+              {{ 'sections.wishlist.title' | t }}
+            </h2>
+            {% if section.settings.subtitle != blank %}
+              <p class="wishlist__subtitle">
+                {{ section.settings.subtitle | escape }}
+              </p>
+            {% endif %}
+          </div>
+          
+          <div class="wishlist__controls">
+            <div class="wishlist__product-count" data-product-count>
+              <span class="wishlist__count-text">
+                {{ 'sections.wishlist.products_count' | t: count: 0 }}
+              </span>
+            </div>
+            
+            {% if section.settings.show_share %}
+              <button
+                type="button"
+                class="wishlist__share-button"
+                data-share-wishlist
+                aria-label="{{ 'sections.wishlist.share_wishlist' | t }}"
+              >
+                <span class="wishlist__share-icon">
+                  {%- render 'icon-share' -%}
+                </span>
+                <span class="wishlist__share-text">
+                  {{ 'sections.wishlist.share' | t }}
+                </span>
+              </button>
+            {% endif %}
+            
+            <button
+              type="button"
+              class="wishlist__clear-button"
+              data-clear-wishlist
+              style="display: none;"
+            >
+              {{ 'sections.wishlist.clear_all' | t }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wishlist Content -->
+    <div class="wishlist__content">
+      <div class="page-width">
+        <!-- Wishlist Grid -->
+        <div class="wishlist__grid" data-wishlist-grid>
+          <!-- Products will be populated by JavaScript -->
+        </div>
+        
+        <!-- Empty State -->
+        <div class="wishlist__empty" data-empty-state>
+          <div class="wishlist__empty-content">
+            <div class="wishlist__empty-icon">
+              {%- render 'icon-heart' -%}
+            </div>
+            <h3 class="wishlist__empty-title">
+              {{ 'sections.wishlist.empty_title' | t }}
+            </h3>
+            <p class="wishlist__empty-text">
+              {{ 'sections.wishlist.empty_text' | t }}
+            </p>
+            <div class="wishlist__empty-actions">
+              <a href="{{ routes.collections_url }}" class="button button--primary">
+                {{ 'sections.wishlist.browse_products' | t }}
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Loading State -->
+        <div class="wishlist__loading" data-loading-state>
+          <div class="wishlist__loading-content">
+            <div class="wishlist__loading-spinner"></div>
+            <p class="wishlist__loading-text">
+              {{ 'sections.wishlist.loading' | t }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="wishlist__share-modal" data-share-modal>
+      <div class="wishlist__share-modal-content">
+        <div class="wishlist__share-modal-header">
+          <h3 class="wishlist__share-modal-title">
+            {{ 'sections.wishlist.share_wishlist' | t }}
+          </h3>
+          <button
+            type="button"
+            class="wishlist__share-modal-close"
+            data-close-share-modal
+            aria-label="{{ 'accessibility.close' | t }}"
+          >
+            {%- render 'icon-close' -%}
+          </button>
+        </div>
+        
+        <div class="wishlist__share-modal-body">
+          <div class="wishlist__share-options">
+            <button
+              type="button"
+              class="wishlist__share-option"
+              data-share-option="copy"
+            >
+              <span class="wishlist__share-option-icon">
+                {%- render 'icon-copy' -%}
+              </span>
+              <span class="wishlist__share-option-text">
+                {{ 'sections.wishlist.copy_link' | t }}
+              </span>
+            </button>
+            
+            <button
+              type="button"
+              class="wishlist__share-option"
+              data-share-option="email"
+            >
+              <span class="wishlist__share-option-icon">
+                {%- render 'icon-email' -%}
+              </span>
+              <span class="wishlist__share-option-text">
+                {{ 'sections.wishlist.email' | t }}
+              </span>
+            </button>
+            
+            <button
+              type="button"
+              class="wishlist__share-option"
+              data-share-option="social"
+            >
+              <span class="wishlist__share-option-icon">
+                {%- render 'icon-share' -%}
+              </span>
+              <span class="wishlist__share-option-text">
+                {{ 'sections.wishlist.social_share' | t }}
+              </span>
+            </button>
+          </div>
+          
+          <div class="wishlist__share-url">
+            <label for="wishlist-url-{{ section.id }}" class="wishlist__share-url-label">
+              {{ 'sections.wishlist.wishlist_url' | t }}
+            </label>
+            <div class="wishlist__share-url-input-group">
+              <input
+                type="text"
+                id="wishlist-url-{{ section.id }}"
+                class="wishlist__share-url-input"
+                data-share-url-input
+                readonly
+                value="{{ request.url }}"
+              >
+              <button
+                type="button"
+                class="wishlist__share-url-copy"
+                data-copy-url
+                aria-label="{{ 'sections.wishlist.copy_url' | t }}"
+              >
+                {%- render 'icon-copy' -%}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wishlist Overlay -->
+    <div class="wishlist__overlay" data-wishlist-overlay></div>
+  </wishlist>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.wishlist.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.wishlist.settings.content_header.content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "t:sections.wishlist.settings.subtitle.label",
+      "default": "t:sections.wishlist.settings.subtitle.default"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:sections.wishlist.settings.layout.options__1.label"
+        },
+        {
+          "value": "list",
+          "label": "t:sections.wishlist.settings.layout.options__2.label"
+        }
+      ],
+      "default": "grid",
+      "label": "t:sections.wishlist.settings.layout.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.wishlist.settings.columns_desktop.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2,
+      "label": "t:sections.wishlist.settings.columns_mobile.label"
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 20,
+      "max": 60,
+      "step": 10,
+      "default": 30,
+      "unit": "px",
+      "label": "t:sections.wishlist.settings.spacing.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.wishlist.settings.features_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prices",
+      "default": true,
+      "label": "t:sections.wishlist.settings.show_prices.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variants",
+      "default": true,
+      "label": "t:sections.wishlist.settings.show_variants.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_availability",
+      "default": true,
+      "label": "t:sections.wishlist.settings.show_availability.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_remove",
+      "default": true,
+      "label": "t:sections.wishlist.settings.show_remove.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "default": true,
+      "label": "t:sections.wishlist.settings.show_share.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.wishlist.settings.behavior_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "persist_wishlist",
+      "default": true,
+      "label": "t:sections.wishlist.settings.persist_wishlist.label"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "default": 250,
+      "unit": "ms",
+      "label": "t:sections.wishlist.settings.animation_duration.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.wishlist.settings.hide_on_mobile.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.wishlist.presets.name"
+    }
+  ]
+}
+{% endschema %} 

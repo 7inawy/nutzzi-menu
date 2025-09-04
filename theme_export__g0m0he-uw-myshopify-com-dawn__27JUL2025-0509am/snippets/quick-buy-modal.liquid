@@ -1,0 +1,149 @@
+{% comment %}
+  Renders a quick buy modal for product variant selection
+
+  Accepts:
+  - product: {Object} Product Liquid object
+  - modal_id: {String} Unique modal ID
+
+  Usage:
+  {% render 'quick-buy-modal', product: product, modal_id: 'quick-buy-modal-1' %}
+{% endcomment %}
+
+<quick-buy-modal
+  id="{{ modal_id }}"
+  class="quick-buy-modal modal"
+  data-product-id="{{ product.id }}"
+  data-product-url="{{ product.url }}"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="{{ modal_id }}-title"
+  aria-describedby="{{ modal_id }}-description"
+>
+  <div class="modal__overlay" data-modal-close></div>
+  
+  <div class="modal__content">
+    <div class="modal__header">
+      <h2 id="{{ modal_id }}-title" class="modal__title">
+        {{ 'products.product.quick_buy_title' | t: product: product.title }}
+      </h2>
+      <button
+        type="button"
+        class="modal__close"
+        data-modal-close
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        <svg class="icon icon-close" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal__body">
+      <div class="quick-buy-modal__product">
+        <div class="quick-buy-modal__image">
+          <img
+            src="{{ product.featured_media | image_url: width: 400 }}"
+            alt="{{ product.featured_media.alt | escape }}"
+            loading="lazy"
+            width="{{ product.featured_media.width }}"
+            height="{{ product.featured_media.height }}"
+          >
+        </div>
+
+        <div class="quick-buy-modal__info">
+          <h3 class="quick-buy-modal__product-title">{{ product.title }}</h3>
+          
+          {% if product.vendor %}
+            <p class="quick-buy-modal__vendor">{{ product.vendor }}</p>
+          {% endif %}
+
+          <div class="quick-buy-modal__price">
+            {% render 'price', product: product %}
+          </div>
+
+          {% unless product.has_only_default_variant %}
+            <div class="quick-buy-modal__variants">
+              {% for option in product.options_with_values %}
+                <div class="quick-buy-modal__option">
+                  <label class="quick-buy-modal__option-label" for="{{ modal_id }}-option-{{ forloop.index }}">
+                    {{ option.name }}
+                  </label>
+                  
+                  <div class="quick-buy-modal__option-values">
+                    {% for value in option.values %}
+                      <input
+                        type="radio"
+                        id="{{ modal_id }}-option-{{ forloop.parentloop.index }}-{{ forloop.index }}"
+                        name="{{ modal_id }}-option-{{ forloop.parentloop.index }}"
+                        value="{{ value | escape }}"
+                        class="quick-buy-modal__option-input"
+                        {% if forloop.first %}checked{% endif %}
+                        data-option-index="{{ forloop.parentloop.index0 }}"
+                        data-option-value="{{ value | escape }}"
+                      >
+                      <label
+                        for="{{ modal_id }}-option-{{ forloop.parentloop.index }}-{{ forloop.index }}"
+                        class="quick-buy-modal__option-button"
+                      >
+                        {{ value }}
+                      </label>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endunless %}
+
+          <div class="quick-buy-modal__quantity">
+            <label for="{{ modal_id }}-quantity" class="quick-buy-modal__quantity-label">
+              {{ 'products.product.quantity.label' | t }}
+            </label>
+            <quantity-input class="quantity">
+              <button class="quantity__button no-js-hidden" name="minus" type="button">
+                <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}</span>
+                <svg class="icon icon-minus" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                  <path d="M19 13H5v-2h14v2z"/>
+                </svg>
+              </button>
+              <input
+                class="quantity__input"
+                type="number"
+                name="quantity"
+                id="{{ modal_id }}-quantity"
+                min="1"
+                value="1"
+                form="{{ modal_id }}-form"
+              >
+              <button class="quantity__button no-js-hidden" name="plus" type="button">
+                <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product.title | escape }}</span>
+                <svg class="icon icon-plus" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+              </button>
+            </quantity-input>
+          </div>
+
+          <div class="quick-buy-modal__actions">
+            <button
+              type="button"
+              class="button button--full-width button--primary quick-buy-modal__add-to-cart"
+              data-product-id="{{ product.id }}"
+              {% if product.available == false %}disabled{% endif %}
+            >
+              <span class="quick-buy-modal__button-text">
+                {% if product.available %}
+                  {{ 'products.product.add_to_cart' | t }}
+                {% else %}
+                  {{ 'products.product.sold_out' | t }}
+                {% endif %}
+              </span>
+              <span class="quick-buy-modal__button-loading hidden">
+                {{ 'products.product.adding_to_cart' | t }}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</quick-buy-modal> 

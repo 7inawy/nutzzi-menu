@@ -1,0 +1,523 @@
+{{ 'component-advanced-filters.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'advanced-filters.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-advanced-filters {
+    --filter-sidebar-width: {{ section.settings.sidebar_width }}px;
+    --filter-mobile-breakpoint: {{ section.settings.mobile_breakpoint }}px;
+    --filter-animation-duration: {{ section.settings.animation_duration }}ms;
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-advanced-filters {
+        display: none;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-advanced-filters">
+  <advanced-filters
+    class="advanced-filters"
+    data-section="{{ section.id }}"
+    data-layout="{{ section.settings.layout }}"
+    data-mobile-layout="{{ section.settings.mobile_layout }}"
+    data-show-counts="{{ section.settings.show_counts }}"
+    data-show-clear-all="{{ section.settings.show_clear_all }}"
+    data-auto-apply="{{ section.settings.auto_apply }}"
+    data-debounce-delay="{{ section.settings.debounce_delay }}"
+    data-persist-filters="{{ section.settings.persist_filters }}"
+    data-url="{{ request.url }}"
+    data-collection="{{ collection.handle }}"
+    {% if section.settings.hide_on_mobile %}data-hide-mobile="true"{% endif %}
+  >
+    <!-- Mobile Filter Toggle -->
+    <div class="advanced-filters__mobile-toggle">
+      <button
+        type="button"
+        class="advanced-filters__toggle-button"
+        data-filter-toggle
+        aria-label="{{ 'sections.advanced_filters.mobile_toggle' | t }}"
+      >
+        <span class="advanced-filters__toggle-icon">
+          {%- render 'icon-filter' -%}
+        </span>
+        <span class="advanced-filters__toggle-text">
+          {{ 'sections.advanced_filters.mobile_toggle' | t }}
+        </span>
+        <span class="advanced-filters__active-count" data-active-count></span>
+      </button>
+    </div>
+
+    <!-- Filter Sidebar -->
+    <div class="advanced-filters__sidebar" data-filter-sidebar>
+      <div class="advanced-filters__sidebar-header">
+        <h3 class="advanced-filters__sidebar-title">
+          {{ 'sections.advanced_filters.title' | t }}
+        </h3>
+        <button
+          type="button"
+          class="advanced-filters__close"
+          data-filter-close
+          aria-label="{{ 'accessibility.close' | t }}"
+        >
+          {%- render 'icon-close' -%}
+        </button>
+      </div>
+
+      <div class="advanced-filters__sidebar-content">
+        <!-- Clear All Filters -->
+        {% if section.settings.show_clear_all %}
+          <div class="advanced-filters__clear-all">
+            <button
+              type="button"
+              class="advanced-filters__clear-button"
+              data-clear-all-filters
+            >
+              {{ 'sections.advanced_filters.clear_all' | t }}
+            </button>
+          </div>
+        {% endif %}
+
+        <!-- Filter Groups -->
+        <div class="advanced-filters__groups" data-filter-groups>
+          <!-- Price Range Filter -->
+          {% if section.settings.show_price_filter %}
+            <div class="advanced-filters__group" data-filter-group="price">
+              <div class="advanced-filters__group-header">
+                <h4 class="advanced-filters__group-title">
+                  {{ 'sections.advanced_filters.price_range' | t }}
+                </h4>
+                <button
+                  type="button"
+                  class="advanced-filters__group-toggle"
+                  data-group-toggle
+                  aria-expanded="true"
+                >
+                  {%- render 'icon-caret' -%}
+                </button>
+              </div>
+              <div class="advanced-filters__group-content" data-group-content>
+                <div class="advanced-filters__price-range" data-price-range>
+                  <div class="advanced-filters__price-inputs">
+                    <div class="advanced-filters__price-input">
+                      <label for="price-min-{{ section.id }}" class="advanced-filters__price-label">
+                        {{ 'sections.advanced_filters.min_price' | t }}
+                      </label>
+                      <input
+                        type="number"
+                        id="price-min-{{ section.id }}"
+                        class="advanced-filters__price-field"
+                        data-price-min
+                        placeholder="{{ 'sections.advanced_filters.min_price' | t }}"
+                        min="0"
+                        step="0.01"
+                      >
+                    </div>
+                    <div class="advanced-filters__price-input">
+                      <label for="price-max-{{ section.id }}" class="advanced-filters__price-label">
+                        {{ 'sections.advanced_filters.max_price' | t }}
+                      </label>
+                      <input
+                        type="number"
+                        id="price-max-{{ section.id }}"
+                        class="advanced-filters__price-field"
+                        data-price-max
+                        placeholder="{{ 'sections.advanced_filters.max_price' | t }}"
+                        min="0"
+                        step="0.01"
+                      >
+                    </div>
+                  </div>
+                  <div class="advanced-filters__price-slider" data-price-slider></div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Vendor Filter -->
+          {% if section.settings.show_vendor_filter %}
+            <div class="advanced-filters__group" data-filter-group="vendor">
+              <div class="advanced-filters__group-header">
+                <h4 class="advanced-filters__group-title">
+                  {{ 'sections.advanced_filters.vendor' | t }}
+                </h4>
+                <button
+                  type="button"
+                  class="advanced-filters__group-toggle"
+                  data-group-toggle
+                  aria-expanded="true"
+                >
+                  {%- render 'icon-caret' -%}
+                </button>
+              </div>
+              <div class="advanced-filters__group-content" data-group-content>
+                <div class="advanced-filters__vendor-list" data-vendor-list>
+                  <!-- Vendors will be populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Product Type Filter -->
+          {% if section.settings.show_type_filter %}
+            <div class="advanced-filters__group" data-filter-group="type">
+              <div class="advanced-filters__group-header">
+                <h4 class="advanced-filters__group-title">
+                  {{ 'sections.advanced_filters.product_type' | t }}
+                </h4>
+                <button
+                  type="button"
+                  class="advanced-filters__group-toggle"
+                  data-group-toggle
+                  aria-expanded="true"
+                >
+                  {%- render 'icon-caret' -%}
+                </button>
+              </div>
+              <div class="advanced-filters__group-content" data-group-content>
+                <div class="advanced-filters__type-list" data-type-list>
+                  <!-- Product types will be populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Tag Filter -->
+          {% if section.settings.show_tag_filter %}
+            <div class="advanced-filters__group" data-filter-group="tags">
+              <div class="advanced-filters__group-header">
+                <h4 class="advanced-filters__group-title">
+                  {{ 'sections.advanced_filters.tags' | t }}
+                </h4>
+                <button
+                  type="button"
+                  class="advanced-filters__group-toggle"
+                  data-group-toggle
+                  aria-expanded="true"
+                >
+                  {%- render 'icon-caret' -%}
+                </button>
+              </div>
+              <div class="advanced-filters__group-content" data-group-content>
+                <div class="advanced-filters__tag-list" data-tag-list>
+                  <!-- Tags will be populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Availability Filter -->
+          {% if section.settings.show_availability_filter %}
+            <div class="advanced-filters__group" data-filter-group="availability">
+              <div class="advanced-filters__group-header">
+                <h4 class="advanced-filters__group-title">
+                  {{ 'sections.advanced_filters.availability' | t }}
+                </h4>
+                <button
+                  type="button"
+                  class="advanced-filters__group-toggle"
+                  data-group-toggle
+                  aria-expanded="true"
+                >
+                  {%- render 'icon-caret' -%}
+                </button>
+              </div>
+              <div class="advanced-filters__group-content" data-group-content>
+                <div class="advanced-filters__availability-options">
+                  <label class="advanced-filters__checkbox">
+                    <input
+                      type="checkbox"
+                      data-filter="in_stock"
+                      value="in_stock"
+                    >
+                    <span class="advanced-filters__checkbox-label">
+                      {{ 'sections.advanced_filters.in_stock' | t }}
+                    </span>
+                  </label>
+                  <label class="advanced-filters__checkbox">
+                    <input
+                      type="checkbox"
+                      data-filter="out_of_stock"
+                      value="out_of_stock"
+                    >
+                    <span class="advanced-filters__checkbox-label">
+                      {{ 'sections.advanced_filters.out_of_stock' | t }}
+                    </span>
+                  </label>
+                  <label class="advanced-filters__checkbox">
+                    <input
+                      type="checkbox"
+                      data-filter="on_sale"
+                      value="on_sale"
+                    >
+                    <span class="advanced-filters__checkbox-label">
+                      {{ 'sections.advanced_filters.on_sale' | t }}
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Custom Metafield Filters -->
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'metafield_filter' %}
+                <div class="advanced-filters__group" data-filter-group="metafield-{{ block.settings.metafield_key }}" {{ block.shopify_attributes }}>
+                  <div class="advanced-filters__group-header">
+                    <h4 class="advanced-filters__group-title">
+                      {{ block.settings.title }}
+                    </h4>
+                    <button
+                      type="button"
+                      class="advanced-filters__group-toggle"
+                      data-group-toggle
+                      aria-expanded="true"
+                    >
+                      {%- render 'icon-caret' -%}
+                    </button>
+                  </div>
+                  <div class="advanced-filters__group-content" data-group-content>
+                    <div class="advanced-filters__metafield-list" data-metafield-list data-metafield-key="{{ block.settings.metafield_key }}">
+                      <!-- Metafield values will be populated by JavaScript -->
+                    </div>
+                  </div>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+
+        <!-- Apply Filters Button -->
+        {% unless section.settings.auto_apply %}
+          <div class="advanced-filters__actions">
+            <button
+              type="button"
+              class="button button--primary advanced-filters__apply-button"
+              data-apply-filters
+            >
+              {{ 'sections.advanced_filters.apply_filters' | t }}
+            </button>
+          </div>
+        {% endunless %}
+      </div>
+    </div>
+
+    <!-- Active Filters Display -->
+    <div class="advanced-filters__active" data-active-filters>
+      <div class="advanced-filters__active-list" data-active-filters-list>
+        <!-- Active filters will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="advanced-filters__results" data-results-summary>
+      <div class="advanced-filters__results-count" data-results-count>
+        <!-- Results count will be populated by JavaScript -->
+      </div>
+      <div class="advanced-filters__results-sort" data-results-sort>
+        <label for="sort-by-{{ section.id }}" class="advanced-filters__sort-label">
+          {{ 'sections.advanced_filters.sort_by' | t }}
+        </label>
+        <select id="sort-by-{{ section.id }}" class="advanced-filters__sort-select" data-sort-select>
+          <option value="manual">{{ 'sections.advanced_filters.sort_manual' | t }}</option>
+          <option value="price-ascending">{{ 'sections.advanced_filters.sort_price_low' | t }}</option>
+          <option value="price-descending">{{ 'sections.advanced_filters.sort_price_high' | t }}</option>
+          <option value="title-ascending">{{ 'sections.advanced_filters.sort_name_az' | t }}</option>
+          <option value="title-descending">{{ 'sections.advanced_filters.sort_name_za' | t }}</option>
+          <option value="created-ascending">{{ 'sections.advanced_filters.sort_date_old' | t }}</option>
+          <option value="created-descending">{{ 'sections.advanced_filters.sort_date_new' | t }}</option>
+          <option value="best-selling">{{ 'sections.advanced_filters.sort_best_selling' | t }}</option>
+        </select>
+      </div>
+    </div>
+  </advanced-filters>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.advanced_filters.name",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.advanced_filters.settings.layout_header.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "t:sections.advanced_filters.settings.layout.options__1.label"
+        },
+        {
+          "value": "dropdown",
+          "label": "t:sections.advanced_filters.settings.layout.options__2.label"
+        },
+        {
+          "value": "horizontal",
+          "label": "t:sections.advanced_filters.settings.layout.options__3.label"
+        }
+      ],
+      "default": "sidebar",
+      "label": "t:sections.advanced_filters.settings.layout.label"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "options": [
+        {
+          "value": "drawer",
+          "label": "t:sections.advanced_filters.settings.mobile_layout.options__1.label"
+        },
+        {
+          "value": "modal",
+          "label": "t:sections.advanced_filters.settings.mobile_layout.options__2.label"
+        }
+      ],
+      "default": "drawer",
+      "label": "t:sections.advanced_filters.settings.mobile_layout.label"
+    },
+    {
+      "type": "range",
+      "id": "sidebar_width",
+      "min": 200,
+      "max": 400,
+      "step": 20,
+      "default": 280,
+      "unit": "px",
+      "label": "t:sections.advanced_filters.settings.sidebar_width.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.advanced_filters.settings.filters_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price_filter",
+      "default": true,
+      "label": "t:sections.advanced_filters.settings.show_price_filter.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor_filter",
+      "default": true,
+      "label": "t:sections.advanced_filters.settings.show_vendor_filter.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_type_filter",
+      "default": true,
+      "label": "t:sections.advanced_filters.settings.show_type_filter.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tag_filter",
+      "default": true,
+      "label": "t:sections.advanced_filters.settings.show_tag_filter.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_availability_filter",
+      "default": true,
+      "label": "t:sections.advanced_filters.settings.show_availability_filter.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.advanced_filters.settings.behavior_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_counts",
+      "default": true,
+      "label": "t:sections.advanced_filters.settings.show_counts.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_clear_all",
+      "default": true,
+      "label": "t:sections.advanced_filters.settings.show_clear_all.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_apply",
+      "default": false,
+      "label": "t:sections.advanced_filters.settings.auto_apply.label"
+    },
+    {
+      "type": "range",
+      "id": "debounce_delay",
+      "min": 100,
+      "max": 1000,
+      "step": 100,
+      "default": 300,
+      "unit": "ms",
+      "label": "t:sections.advanced_filters.settings.debounce_delay.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "persist_filters",
+      "default": true,
+      "label": "t:sections.advanced_filters.settings.persist_filters.label"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "default": 250,
+      "unit": "ms",
+      "label": "t:sections.advanced_filters.settings.animation_duration.label"
+    },
+    {
+      "type": "range",
+      "id": "mobile_breakpoint",
+      "min": 480,
+      "max": 1024,
+      "step": 40,
+      "default": 749,
+      "unit": "px",
+      "label": "t:sections.advanced_filters.settings.mobile_breakpoint.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "default": false,
+      "label": "t:sections.advanced_filters.settings.hide_on_mobile.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "metafield_filter",
+      "name": "t:sections.advanced_filters.blocks.metafield_filter.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.advanced_filters.blocks.metafield_filter.settings.title.label",
+          "default": "t:sections.advanced_filters.blocks.metafield_filter.settings.title.default"
+        },
+        {
+          "type": "text",
+          "id": "metafield_key",
+          "label": "t:sections.advanced_filters.blocks.metafield_filter.settings.metafield_key.label",
+          "info": "t:sections.advanced_filters.blocks.metafield_filter.settings.metafield_key.info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.advanced_filters.presets.name"
+    }
+  ]
+}
+{% endschema %} 

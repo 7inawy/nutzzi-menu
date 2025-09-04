@@ -1,0 +1,133 @@
+{% comment %}
+  Renders enhanced breadcrumbs for improved navigation.
+
+  Usage:
+  {% render 'breadcrumbs' %}
+{% endcomment %}
+
+{%- liquid
+  assign breadcrumb_separator = 'icon-arrow.svg'
+  assign show_breadcrumbs = true
+  
+  if template == 'index'
+    assign show_breadcrumbs = false
+  endif
+  
+  if template == '404'
+    assign show_breadcrumbs = false
+  endif
+-%}
+
+{%- if show_breadcrumbs -%}
+  <nav class="breadcrumbs" role="navigation" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
+    <div class="breadcrumbs__container page-width">
+      <ol class="breadcrumbs__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="{{ routes.root_url }}" class="breadcrumbs__link" itemprop="item">
+            <span itemprop="name">{{ 'breadcrumbs.home' | t }}</span>
+          </a>
+          <meta itemprop="position" content="1" />
+        </li>
+
+        {%- case template -%}
+          {%- when 'collection' -%}
+            <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <a href="{{ routes.collections_url }}" class="breadcrumbs__link" itemprop="item">
+                <span itemprop="name">{{ 'breadcrumbs.collections' | t }}</span>
+              </a>
+              <meta itemprop="position" content="2" />
+            </li>
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ collection.title | escape }}</span>
+              <meta itemprop="position" content="3" />
+            </li>
+
+          {%- when 'product' -%}
+            {%- if collection -%}
+              <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <a href="{{ routes.collections_url }}" class="breadcrumbs__link" itemprop="item">
+                  <span itemprop="name">{{ 'breadcrumbs.collections' | t }}</span>
+                </a>
+                <meta itemprop="position" content="2" />
+              </li>
+              <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <a href="{{ collection.url }}" class="breadcrumbs__link" itemprop="item">
+                  <span itemprop="name">{{ collection.title | escape }}</span>
+                </a>
+                <meta itemprop="position" content="3" />
+              </li>
+              <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <span itemprop="name">{{ product.title | escape }}</span>
+                <meta itemprop="position" content="4" />
+              </li>
+            {%- else -%}
+              <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <span itemprop="name">{{ product.title | escape }}</span>
+                <meta itemprop="position" content="2" />
+              </li>
+            {%- endif -%}
+
+          {%- when 'blog' -%}
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ blog.title | escape }}</span>
+              <meta itemprop="position" content="2" />
+            </li>
+
+          {%- when 'article' -%}
+            <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <a href="{{ blog.url }}" class="breadcrumbs__link" itemprop="item">
+                <span itemprop="name">{{ blog.title | escape }}</span>
+              </a>
+              <meta itemprop="position" content="2" />
+            </li>
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ article.title | escape }}</span>
+              <meta itemprop="position" content="3" />
+            </li>
+
+          {%- when 'page' -%}
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ page.title | escape }}</span>
+              <meta itemprop="position" content="2" />
+            </li>
+
+          {%- when 'search' -%}
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ 'breadcrumbs.search_results' | t: terms: search.terms }}</span>
+              <meta itemprop="position" content="2" />
+            </li>
+
+          {%- when 'cart' -%}
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ 'breadcrumbs.cart' | t }}</span>
+              <meta itemprop="position" content="2" />
+            </li>
+
+          {%- when 'customers/account' -%}
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ 'breadcrumbs.account' | t }}</span>
+              <meta itemprop="position" content="2" />
+            </li>
+
+          {%- when 'customers/order' -%}
+            <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <a href="{{ routes.account_url }}" class="breadcrumbs__link" itemprop="item">
+                <span itemprop="name">{{ 'breadcrumbs.account' | t }}</span>
+              </a>
+              <meta itemprop="position" content="2" />
+            </li>
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ 'breadcrumbs.order' | t: order_number: order.name }}</span>
+              <meta itemprop="position" content="3" />
+            </li>
+
+          {%- else -%}
+            <li class="breadcrumbs__item breadcrumbs__item--current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{{ page_title | escape }}</span>
+              <meta itemprop="position" content="2" />
+            </li>
+        {%- endcase -%}
+      </ol>
+    </div>
+  </nav>
+{%- endif -%} 

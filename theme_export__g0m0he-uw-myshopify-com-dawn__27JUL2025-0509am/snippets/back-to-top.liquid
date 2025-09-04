@@ -1,0 +1,20 @@
+{% comment %}
+  Renders a back-to-top button for improved user experience.
+
+  Usage:
+  {% render 'back-to-top' %}
+{% endcomment %}
+
+<back-to-top class="back-to-top" data-back-to-top>
+  <button
+    type="button"
+    class="back-to-top__button"
+    aria-label="{{ 'accessibility.back_to_top' | t }}"
+    data-back-to-top-button
+  >
+    <span class="back-to-top__icon">
+      {{ 'icon-arrow.svg' | inline_asset_content }}
+    </span>
+    <span class="back-to-top__text">{{ 'accessibility.back_to_top' | t }}</span>
+  </button>
+</back-to-top> 

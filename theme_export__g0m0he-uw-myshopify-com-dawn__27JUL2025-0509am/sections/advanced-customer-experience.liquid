@@ -1,0 +1,437 @@
+{% comment %}
+  Advanced Customer Experience Section
+  Comprehensive CX features based on awesome-shopify best practices
+{% endcomment %}
+
+<div class="advanced-customer-experience" data-advanced-cx>
+  <!-- AI-Powered Personalization -->
+  {% if section.settings.enable_personalization %}
+    <div class="personalization-engine" data-personalization>
+      <!-- Personalized Recommendations -->
+      <div class="personalized-recommendations" data-personalized-recommendations>
+        {% if customer %}
+          <div class="recommendations__section">
+            <h3 class="recommendations__title">{{ 'sections.advanced_cx.personalized_for_you' | t }}</h3>
+            <div class="recommendations__grid" data-recommendations-grid>
+              <!-- AI-generated recommendations will be populated here -->
+            </div>
+          </div>
+        {% endif %}
+        
+        <!-- Behavioral Recommendations -->
+        <div class="behavioral-recommendations" data-behavioral-recommendations>
+          <h3 class="recommendations__title">{{ 'sections.advanced_cx.based_on_browsing' | t }}</h3>
+          <div class="recommendations__grid" data-behavioral-grid>
+            <!-- Behavioral recommendations will be populated here -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Smart Search -->
+      <div class="smart-search" data-smart-search>
+        <div class="smart-search__container">
+          <input 
+            type="search" 
+            class="smart-search__input" 
+            placeholder="{{ 'sections.advanced_cx.smart_search_placeholder' | t }}"
+            data-smart-search-input
+          >
+          <div class="smart-search__suggestions" data-smart-search-suggestions hidden>
+            <!-- AI-powered search suggestions -->
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Customer Journey Tracking -->
+  {% if section.settings.enable_journey_tracking %}
+    <div class="customer-journey" data-customer-journey>
+      <!-- Progress Indicator -->
+      <div class="journey-progress" data-journey-progress>
+        <div class="journey-progress__steps">
+          <div class="journey-progress__step journey-progress__step--completed" data-step="browse">
+            <span class="journey-progress__icon">{%- render 'icon-search' -%}</span>
+            <span class="journey-progress__label">{{ 'sections.advanced_cx.step_browse' | t }}</span>
+          </div>
+          <div class="journey-progress__step" data-step="compare">
+            <span class="journey-progress__icon">{%- render 'icon-compare' -%}</span>
+            <span class="journey-progress__label">{{ 'sections.advanced_cx.step_compare' | t }}</span>
+          </div>
+          <div class="journey-progress__step" data-step="purchase">
+            <span class="journey-progress__icon">{%- render 'icon-cart' -%}</span>
+            <span class="journey-progress__label">{{ 'sections.advanced_cx.step_purchase' | t }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Smart Notifications -->
+      <div class="smart-notifications" data-smart-notifications>
+        <div class="notification notification--success" data-notification="success" hidden>
+          <div class="notification__content">
+            <span class="notification__icon">{%- render 'icon-checkmark' -%}</span>
+            <span class="notification__message"></span>
+          </div>
+          <button class="notification__close" data-notification-close>
+            {%- render 'icon-close' -%}
+          </button>
+        </div>
+        
+        <div class="notification notification--info" data-notification="info" hidden>
+          <div class="notification__content">
+            <span class="notification__icon">{%- render 'icon-info' -%}</span>
+            <span class="notification__message"></span>
+          </div>
+          <button class="notification__close" data-notification-close>
+            {%- render 'icon-close' -%}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Advanced Product Discovery -->
+  {% if section.settings.enable_product_discovery %}
+    <div class="product-discovery" data-product-discovery>
+      <!-- Visual Search -->
+      <div class="visual-search" data-visual-search>
+        <div class="visual-search__upload">
+          <input type="file" accept="image/*" data-visual-search-input hidden>
+          <button class="visual-search__button" data-visual-search-trigger>
+            <span class="visual-search__icon">{%- render 'icon-camera' -%}</span>
+            <span class="visual-search__text">{{ 'sections.advanced_cx.search_by_image' | t }}</span>
+          </button>
+        </div>
+        
+        <div class="visual-search__results" data-visual-search-results hidden>
+          <h4 class="visual-search__results-title">{{ 'sections.advanced_cx.similar_products' | t }}</h4>
+          <div class="visual-search__results-grid">
+            <!-- Visual search results will be populated here -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Voice Search -->
+      <div class="voice-search" data-voice-search>
+        <button class="voice-search__button" data-voice-search-trigger>
+          <span class="voice-search__icon">{%- render 'icon-microphone' -%}</span>
+          <span class="voice-search__text">{{ 'sections.advanced_cx.voice_search' | t }}</span>
+        </button>
+        
+        <div class="voice-search__status" data-voice-search-status hidden>
+          <div class="voice-search__listening">
+            <div class="voice-search__pulse"></div>
+            <span class="voice-search__status-text">{{ 'sections.advanced_cx.listening' | t }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Advanced Customer Support -->
+  {% if section.settings.enable_advanced_support %}
+    <div class="advanced-support" data-advanced-support>
+      <!-- AI Chatbot -->
+      <div class="ai-chatbot" data-ai-chatbot>
+        <div class="chatbot__widget" data-chatbot-widget>
+          <button class="chatbot__toggle" data-chatbot-toggle>
+            <span class="chatbot__icon">{%- render 'icon-chat-bubble' -%}</span>
+            <span class="chatbot__status">{{ 'sections.advanced_cx.chat_available' | t }}</span>
+          </button>
+          
+          <div class="chatbot__window" data-chatbot-window hidden>
+            <div class="chatbot__header">
+              <h4 class="chatbot__title">{{ 'sections.advanced_cx.how_can_we_help' | t }}</h4>
+              <button class="chatbot__close" data-chatbot-close>
+                {%- render 'icon-close' -%}
+              </button>
+            </div>
+            
+            <div class="chatbot__messages" data-chatbot-messages>
+              <div class="chatbot__message chatbot__message--bot">
+                <div class="chatbot__message-content">
+                  {{ 'sections.advanced_cx.chat_welcome' | t }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="chatbot__input">
+              <input type="text" class="chatbot__input-field" placeholder="{{ 'sections.advanced_cx.type_message' | t }}" data-chatbot-input>
+              <button class="chatbot__send" data-chatbot-send>
+                {%- render 'icon-arrow' -%}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Smart FAQ -->
+      <div class="smart-faq" data-smart-faq>
+        <div class="faq__search">
+          <input type="search" class="faq__search-input" placeholder="{{ 'sections.advanced_cx.search_faq' | t }}" data-faq-search>
+        </div>
+        
+        <div class="faq__categories" data-faq-categories>
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'faq_category' %}
+                <div class="faq__category" {{ block.shopify_attributes }}>
+                  <h4 class="faq__category-title">{{ block.settings.title }}</h4>
+                  <div class="faq__questions">
+                    {% for i in (1..5) %}
+                      {% assign question_key = 'question_' | append: i %}
+                      {% assign answer_key = 'answer_' | append: i %}
+                      {% if block.settings[question_key] != blank %}
+                        <details class="faq__question">
+                          <summary class="faq__question-summary">
+                            {{ block.settings[question_key] }}
+                          </summary>
+                          <div class="faq__question-answer">
+                            {{ block.settings[answer_key] }}
+                          </div>
+                        </details>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Customer Feedback System -->
+  {% if section.settings.enable_feedback_system %}
+    <div class="feedback-system" data-feedback-system>
+      <!-- Inline Feedback -->
+      <div class="inline-feedback" data-inline-feedback>
+        <div class="feedback__trigger" data-feedback-trigger>
+          <button class="feedback__button">
+            <span class="feedback__icon">{%- render 'icon-star' -%}</span>
+            <span class="feedback__text">{{ 'sections.advanced_cx.rate_experience' | t }}</span>
+          </button>
+        </div>
+        
+        <div class="feedback__modal" data-feedback-modal hidden>
+          <div class="feedback__overlay"></div>
+          <div class="feedback__content">
+            <h4 class="feedback__title">{{ 'sections.advanced_cx.how_was_experience' | t }}</h4>
+            
+            <div class="feedback__rating">
+              {% for i in (1..5) %}
+                <button class="feedback__star" data-rating="{{ i }}">
+                  {%- render 'icon-star' -%}
+                </button>
+              {% endfor %}
+            </div>
+            
+            <div class="feedback__comment">
+              <textarea class="feedback__textarea" placeholder="{{ 'sections.advanced_cx.additional_comments' | t }}" data-feedback-comment></textarea>
+            </div>
+            
+            <div class="feedback__actions">
+              <button class="feedback__submit" data-feedback-submit>
+                {{ 'sections.advanced_cx.submit_feedback' | t }}
+              </button>
+              <button class="feedback__cancel" data-feedback-cancel>
+                {{ 'sections.advanced_cx.cancel' | t }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Advanced Customer Experience",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Personalization"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_personalization",
+      "label": "Enable AI Personalization",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_behavioral_tracking",
+      "label": "Enable Behavioral Tracking",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_smart_search",
+      "label": "Enable Smart Search",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Customer Journey"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_journey_tracking",
+      "label": "Enable Journey Tracking",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_smart_notifications",
+      "label": "Enable Smart Notifications",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Product Discovery"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_product_discovery",
+      "label": "Enable Advanced Discovery",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_visual_search",
+      "label": "Enable Visual Search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_voice_search",
+      "label": "Enable Voice Search",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Customer Support"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_advanced_support",
+      "label": "Enable Advanced Support",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_ai_chatbot",
+      "label": "Enable AI Chatbot",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_smart_faq",
+      "label": "Enable Smart FAQ",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Feedback System"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_feedback_system",
+      "label": "Enable Feedback System",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "feedback_trigger",
+      "label": "Feedback Trigger",
+      "options": [
+        {
+          "value": "scroll",
+          "label": "On Scroll"
+        },
+        {
+          "value": "time",
+          "label": "After Time"
+        },
+        {
+          "value": "action",
+          "label": "After Action"
+        }
+      ],
+      "default": "scroll"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_category",
+      "name": "FAQ Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Title",
+          "default": "General Questions"
+        },
+        {
+          "type": "text",
+          "id": "question_1",
+          "label": "Question 1"
+        },
+        {
+          "type": "textarea",
+          "id": "answer_1",
+          "label": "Answer 1"
+        },
+        {
+          "type": "text",
+          "id": "question_2",
+          "label": "Question 2"
+        },
+        {
+          "type": "textarea",
+          "id": "answer_2",
+          "label": "Answer 2"
+        },
+        {
+          "type": "text",
+          "id": "question_3",
+          "label": "Question 3"
+        },
+        {
+          "type": "textarea",
+          "id": "answer_3",
+          "label": "Answer 3"
+        },
+        {
+          "type": "text",
+          "id": "question_4",
+          "label": "Question 4"
+        },
+        {
+          "type": "textarea",
+          "id": "answer_4",
+          "label": "Answer 4"
+        },
+        {
+          "type": "text",
+          "id": "question_5",
+          "label": "Question 5"
+        },
+        {
+          "type": "textarea",
+          "id": "answer_5",
+          "label": "Answer 5"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Advanced Customer Experience"
+    }
+  ]
+}
+{% endschema %} 

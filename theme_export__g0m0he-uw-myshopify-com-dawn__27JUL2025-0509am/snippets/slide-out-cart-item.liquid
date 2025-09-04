@@ -1,0 +1,155 @@
+{% comment %}
+  Renders a cart item for the slide-out cart
+
+  Accepts:
+  - item: {Object} Cart item object
+
+  Usage:
+  {% render 'slide-out-cart-item', item: item %}
+{% endcomment %}
+
+<div class="slide-out-cart__item" data-cart-item data-item-key="{{ item.key }}">
+  <div class="slide-out-cart__item-image">
+    {% if item.image %}
+      <a href="{{ item.url }}" class="slide-out-cart__item-link">
+        <img
+          src="{{ item.image | image_url: width: 120 }}"
+          alt="{{ item.image.alt | escape }}"
+          loading="lazy"
+          width="60"
+          height="{{ 60 | divided_by: item.image.aspect_ratio | ceil }}"
+          class="slide-out-cart__item-img"
+        >
+      </a>
+    {% else %}
+      <div class="slide-out-cart__item-placeholder">
+        <svg class="icon icon-image" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+        </svg>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="slide-out-cart__item-content">
+    <div class="slide-out-cart__item-info">
+      <h3 class="slide-out-cart__item-title">
+        <a href="{{ item.url }}" class="slide-out-cart__item-link">
+          {{ item.product.title | escape }}
+        </a>
+      </h3>
+      
+      {% if item.product.vendor %}
+        <p class="slide-out-cart__item-vendor">{{ item.product.vendor }}</p>
+      {% endif %}
+
+      {% if item.product.has_only_default_variant == false %}
+        <div class="slide-out-cart__item-variant">
+          {% for option in item.options_with_values %}
+            <span class="slide-out-cart__item-option">
+              {{ option.name }}: {{ option.value }}
+            </span>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if item.properties.size > 0 %}
+        <div class="slide-out-cart__item-properties">
+          {% for property in item.properties %}
+            {% unless property.first == '_' %}
+              <span class="slide-out-cart__item-property">
+                {{ property.first }}: {{ property.last }}
+              </span>
+            {% endunless %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="slide-out-cart__item-price">
+      {% if item.original_price != item.final_price %}
+        <span class="slide-out-cart__item-price-original">
+          {{ item.original_price | money }}
+        </span>
+      {% endif %}
+      <span class="slide-out-cart__item-price-final">
+        {{ item.final_price | money }}
+      </span>
+    </div>
+
+    <div class="slide-out-cart__item-quantity">
+      <label for="Quantity-{{ item.index | plus: 1 }}" class="visually-hidden">
+        {{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}
+      </label>
+      
+      <quantity-input class="quantity">
+        <button
+          class="quantity__button no-js-hidden"
+          name="minus"
+          type="button"
+          data-cart-update
+          data-item-key="{{ item.key }}"
+          data-action="decrease"
+          aria-label="{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}"
+        >
+          <svg class="icon icon-minus" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path d="M19 13H5v-2h14v2z"/>
+          </svg>
+        </button>
+        
+        <input
+          class="quantity__input"
+          type="number"
+          name="updates[]"
+          value="{{ item.quantity }}"
+          min="0"
+          id="Quantity-{{ item.index | plus: 1 }}"
+          data-cart-update
+          data-item-key="{{ item.key }}"
+          data-action="update"
+          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+        >
+        
+        <button
+          class="quantity__button no-js-hidden"
+          name="plus"
+          type="button"
+          data-cart-update
+          data-item-key="{{ item.key }}"
+          data-action="increase"
+          aria-label="{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}"
+        >
+          <svg class="icon icon-plus" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+        </button>
+      </quantity-input>
+    </div>
+
+    <div class="slide-out-cart__item-total">
+      <span class="slide-out-cart__item-total-label">{{ 'sections.slide_out_cart.item_total' | t }}</span>
+      <span class="slide-out-cart__item-total-price">
+        {{ item.final_line_price | money }}
+      </span>
+    </div>
+
+    <button
+      type="button"
+      class="slide-out-cart__item-remove"
+      data-cart-update
+      data-item-key="{{ item.key }}"
+      data-action="remove"
+      aria-label="{{ 'sections.slide_out_cart.remove_item' | t: product: item.product.title | escape }}"
+    >
+      <svg class="icon icon-remove" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+      <span class="visually-hidden">{{ 'sections.slide_out_cart.remove_item' | t: product: item.product.title | escape }}</span>
+    </button>
+
+    <div class="slide-out-cart__item-loading" style="display: none;">
+      <svg class="icon icon-loading" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+        <path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"/>
+      </svg>
+    </div>
+  </div>
+</div> 

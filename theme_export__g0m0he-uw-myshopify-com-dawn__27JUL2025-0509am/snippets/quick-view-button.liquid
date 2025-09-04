@@ -1,0 +1,49 @@
+{% comment %}
+  Renders a quick view button for products
+
+  Accepts:
+  - product: {Object} Product Liquid object
+  - show_icon: {Boolean} Show eye icon (optional, default: true)
+  - button_text: {String} Custom button text (optional)
+  - button_class: {String} Additional CSS classes (optional)
+
+  Usage:
+  {% render 'quick-view-button', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign show_icon = show_icon | default: true
+  assign button_text = button_text | default: 'products.product.quick_view' | t
+  assign button_class = button_class | default: ''
+-%}
+
+<quick-view-button
+  class="quick-view-button {{ button_class }}"
+  data-product-id="{{ product.id }}"
+  data-product-url="{{ product.url }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-image="{{ product.featured_media | image_url: width: 300 }}"
+  data-product-price="{{ product.price | money }}"
+  data-product-compare-price="{{ product.compare_at_price | money }}"
+  data-product-description="{{ product.description | strip_html | truncate: 200 }}"
+  data-product-vendor="{{ product.vendor | escape }}"
+  data-product-type="{{ product.type | escape }}"
+  data-product-tags="{{ product.tags | join: ', ' | escape }}"
+  data-product-available="{{ product.available }}"
+  data-product-variants-count="{{ product.variants_count }}"
+  data-product-options="{{ product.options_with_values | json | escape }}"
+  data-product-variants="{{ product.variants | json | escape }}"
+>
+  <button
+    type="button"
+    class="button button--full-width button--tertiary quick-view-button__trigger"
+    aria-label="{{ button_text }}"
+  >
+    {% if show_icon %}
+      <svg class="icon icon-eye" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+      </svg>
+    {% endif %}
+    <span class="quick-view-button__text">{{ button_text }}</span>
+  </button>
+</quick-view-button> 

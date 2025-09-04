@@ -1,0 +1,198 @@
+{{ 'component-slide-out-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'slide-out-cart.js' | asset_url }}" defer="defer"></script>
+
+<slide-out-cart
+  class="slide-out-cart"
+  data-section="{{ section.id }}"
+  data-show-cart-notes="{{ section.settings.show_cart_notes }}"
+  data-show-shipping-calculator="{{ section.settings.show_shipping_calculator }}"
+  data-show-taxes="{{ section.settings.show_taxes }}"
+  data-show-discounts="{{ section.settings.show_discounts }}"
+  data-auto-open="{{ section.settings.auto_open }}"
+  data-auto-open-delay="{{ section.settings.auto_open_delay }}"
+>
+  <div class="slide-out-cart__overlay" data-cart-close></div>
+  
+  <div class="slide-out-cart__panel">
+    <div class="slide-out-cart__header">
+      <h2 class="slide-out-cart__title">{{ 'sections.slide_out_cart.title' | t }}</h2>
+      <button
+        type="button"
+        class="slide-out-cart__close"
+        data-cart-close
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        <svg class="icon icon-close" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="slide-out-cart__body">
+      <div class="slide-out-cart__items">
+        <!-- Cart items will be loaded here via JavaScript -->
+      </div>
+
+      <div class="slide-out-cart__empty" style="display: none;">
+        <div class="slide-out-cart__empty-content">
+          <svg class="icon icon-cart-empty" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+          <h3 class="slide-out-cart__empty-title">{{ 'sections.slide_out_cart.empty_title' | t }}</h3>
+          <p class="slide-out-cart__empty-text">{{ 'sections.slide_out_cart.empty_text' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="button button--primary">
+            {{ 'sections.slide_out_cart.start_shopping' | t }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-out-cart__footer">
+      <div class="slide-out-cart__summary">
+        <div class="slide-out-cart__subtotal">
+          <span class="slide-out-cart__subtotal-label">{{ 'sections.slide_out_cart.subtotal' | t }}</span>
+          <span class="slide-out-cart__subtotal-price"></span>
+        </div>
+        
+        {% if section.settings.show_taxes %}
+          <div class="slide-out-cart__taxes">
+            <span class="slide-out-cart__taxes-label">{{ 'sections.slide_out_cart.taxes' | t }}</span>
+            <span class="slide-out-cart__taxes-text">{{ 'sections.slide_out_cart.taxes_included' | t }}</span>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.show_shipping_calculator %}
+          <div class="slide-out-cart__shipping">
+            <span class="slide-out-cart__shipping-label">{{ 'sections.slide_out_cart.shipping' | t }}</span>
+            <span class="slide-out-cart__shipping-text">{{ 'sections.slide_out_cart.shipping_calculated' | t }}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="slide-out-cart__actions">
+        <button
+          type="button"
+          class="button button--full-width button--secondary slide-out-cart__continue-shopping"
+          data-cart-close
+        >
+          {{ 'sections.slide_out_cart.continue_shopping' | t }}
+        </button>
+        
+        <a
+          href="{{ routes.cart_url }}"
+          class="button button--full-width button--primary slide-out-cart__checkout"
+        >
+          {{ 'sections.slide_out_cart.checkout' | t }}
+        </a>
+      </div>
+
+      {% if section.settings.show_cart_notes %}
+        <div class="slide-out-cart__notes">
+          <label for="slide-out-cart-notes" class="slide-out-cart__notes-label">
+            {{ 'sections.slide_out_cart.notes_label' | t }}
+          </label>
+          <textarea
+            id="slide-out-cart-notes"
+            class="slide-out-cart__notes-input"
+            name="note"
+            placeholder="{{ 'sections.slide_out_cart.notes_placeholder' | t }}"
+            rows="3"
+          ></textarea>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</slide-out-cart>
+
+{% schema %}
+{
+  "name": "t:sections.slide_out_cart.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_cart_notes",
+      "default": true,
+      "label": "t:sections.slide_out_cart.settings.show_cart_notes.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping_calculator",
+      "default": true,
+      "label": "t:sections.slide_out_cart.settings.show_shipping_calculator.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_taxes",
+      "default": true,
+      "label": "t:sections.slide_out_cart.settings.show_taxes.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discounts",
+      "default": true,
+      "label": "t:sections.slide_out_cart.settings.show_discounts.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_open",
+      "default": false,
+      "label": "t:sections.slide_out_cart.settings.auto_open.label"
+    },
+    {
+      "type": "range",
+      "id": "auto_open_delay",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "unit": "s",
+      "label": "t:sections.slide_out_cart.settings.auto_open_delay.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.slide_out_cart.settings.styling_header.content"
+    },
+    {
+      "type": "select",
+      "id": "cart_position",
+      "options": [
+        {
+          "value": "right",
+          "label": "t:sections.slide_out_cart.settings.cart_position.options.right.label"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.slide_out_cart.settings.cart_position.options.left.label"
+        }
+      ],
+      "default": "right",
+      "label": "t:sections.slide_out_cart.settings.cart_position.label"
+    },
+    {
+      "type": "range",
+      "id": "cart_width",
+      "min": 300,
+      "max": 500,
+      "step": 50,
+      "default": 400,
+      "unit": "px",
+      "label": "t:sections.slide_out_cart.settings.cart_width.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.slide_out_cart.presets.name"
+    }
+  ]
+}
+{% endschema %} 
